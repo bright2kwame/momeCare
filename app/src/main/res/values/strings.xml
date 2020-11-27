@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">MoMECARE Foundation</string>
+    <string name="get_started">Let\'s Start</string>
+
+
+    <!--the onboarding section-->
+    <string name="tutorial_one">Hello There</string>
+    <string name="tutorial_one_message">Welcome to StoreFront, the new smart way of managing your business.</string>
+    <string name="tutorial_two">Easy To Use</string>
+    <string name="tutorial_two_message">Little or no training needed to start selling.</string>
+    <string name="tutorial_three">Track Sales</string>
+    <string name="tutorial_three_message">Know the day to day sales in your shop where ever you are.</string>
+    <string name="tutorial_four">Offline Use</string>
+    <string name="tutorial_four_message">Works even without internet access, sync all data when there is internet.</string>
+    <!--end of the onboarding-->
+
 </resources>
