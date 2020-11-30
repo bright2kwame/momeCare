@@ -24,9 +24,9 @@
         android:layout_height="10dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginRight="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
         app:layout_constraintBottom_toTopOf="@+id/buttonSignIn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,16 +39,27 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSignIn"
         style="@style/MaterialTextButtonRoundedStyle"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/button_height"
         android:layout_margin="@dimen/item_margin"
         android:text="@string/get_started"
         android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textTerms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textTerms"
+        android:layout_margin="@dimen/item_margin"
+        android:layout_width="wrap_content"
+        android:text="@string/terms_and_policies"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

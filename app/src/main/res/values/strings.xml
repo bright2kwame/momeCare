@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MoMECARE Foundation</string>
     <string name="get_started">Let\'s Start</string>
+    <string name="sign_in">Sign In</string>
+    <string name="terms_and_policies">Made with Love from Ghana.\nTerms and Policies here.</string>
 
 
     <!--the onboarding section-->
@@ -13,5 +15,13 @@
     <string name="tutorial_four">Offline Use</string>
     <string name="tutorial_four_message">Works even without internet access, sync all data when there is internet.</string>
     <!--end of the onboarding-->
+
+    <!--the menu section-->
+    <string name="menu_categories">Category</string>
+    <string name="menu_surveys">Survey</string>
+    <string name="menu_responds">Respond</string>
+    <string name="menu_respondents">Respondent</string>
+    <string name="menu_accounts">Account</string>
+    <!--end of menu-->
 
 </resources>

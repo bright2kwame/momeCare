@@ -9,4 +9,13 @@
     <color name="colorSecondary">#0054d0</color>
     <color name="colorSecondaryDark">#006aed</color>
     <color name="colorLightDark">#555353</color>
+
+    <color name="primaryColor">#6e01ac</color>
+    <color name="primaryLightColor">#a243df</color>
+    <color name="primaryDarkColor">#39007c</color>
+    <color name="secondaryColor">#0054d0</color>
+    <color name="secondaryLightColor">#5e80ff</color>
+    <color name="secondaryDarkColor">#002d9e</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#ffffff</color>
 </resources>

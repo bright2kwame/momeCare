@@ -1,8 +1,7 @@
 package com.momecarefoundation.app
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.momecarefoundation.app.R
+import androidx.appcompat.app.AppCompatActivity
 import com.momecarefoundation.app.extension.autoScroll
 import kotlinx.android.synthetic.main.activity_tutorial.*
 

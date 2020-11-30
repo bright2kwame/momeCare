@@ -12,6 +12,17 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
     <!-- style for material button non-outlines-->
@@ -34,13 +45,27 @@
 
     <!-- style for material button non-outlines-->
     <style name="MaterialTextButtonRoundedStyle" parent="MaterialTextButtonStyle">
-        <item name="android:bottomLeftRadius">8dp</item>
-        <item name="android:bottomRightRadius">8dp</item>
-        <item name="android:topLeftRadius">8dp</item>
-        <item name="android:topRightRadius">8dp</item>
-        <item name="boxCornerRadiusBottomEnd">8dp</item>
-        <item name="boxCornerRadiusBottomStart">8dp</item>
-        <item name="boxCornerRadiusTopEnd">8dp</item>
-        <item name="cornerRadius">8dp</item>
+        <item name="android:bottomLeftRadius">@dimen/corner_radius</item>
+        <item name="android:bottomRightRadius">@dimen/corner_radius</item>
+        <item name="android:topLeftRadius">@dimen/corner_radius</item>
+        <item name="android:topRightRadius">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_radius</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
     </style>
+
+    <!-- style for material text input-->
+    <style name="MaterialTextTextInputRoundedStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:bottomLeftRadius">@dimen/corner_radius</item>
+        <item name="android:bottomRightRadius">@dimen/corner_radius</item>
+        <item name="android:topLeftRadius">@dimen/corner_radius</item>
+        <item name="android:topRightRadius">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_radius</item>
+        <item name="boxCornerRadiusTopStart">@dimen/corner_radius</item>
+    </style>
+
+
 </resources>
