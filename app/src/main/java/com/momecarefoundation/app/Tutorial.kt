@@ -19,7 +19,7 @@ class Tutorial : AppCompatActivity() {
 
 
         buttonSignIn.setOnClickListener {
-            startActivity(Intent(this,Home::class.java))
+            startActivity(Intent(this, Login::class.java))
             finish()
         }
 
