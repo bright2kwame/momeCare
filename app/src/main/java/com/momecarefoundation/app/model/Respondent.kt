@@ -52,6 +52,7 @@ open class Respondent(
             jsonObject.put("last_name", lastName)
             jsonObject.put("phone", phone)
             jsonObject.put("backed_up", isBackedUp)
+            jsonObject.put("profile", profile)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()
