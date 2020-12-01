@@ -6,7 +6,8 @@
             android:shape="rectangle"
             android:thickness="1dp"
             android:useLevel="false">
-            <solid android:color="@color/colorPrimary" />
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="0.1dp" android:color="@color/colorPrimary"/>
         </shape>
     </item>
 </layer-list>

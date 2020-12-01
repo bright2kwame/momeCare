@@ -6,14 +6,10 @@
 
 
     <!--the onboarding section-->
-    <string name="tutorial_one">Hello There</string>
-    <string name="tutorial_one_message">Welcome to StoreFront, the new smart way of managing your business.</string>
-    <string name="tutorial_two">Easy To Use</string>
-    <string name="tutorial_two_message">Little or no training needed to start selling.</string>
-    <string name="tutorial_three">Track Sales</string>
-    <string name="tutorial_three_message">Know the day to day sales in your shop where ever you are.</string>
-    <string name="tutorial_four">Offline Use</string>
-    <string name="tutorial_four_message">Works even without internet access, sync all data when there is internet.</string>
+    <string name="tutorial_one">MoMeCare Foundation</string>
+    <string name="tutorial_one_message">Welcome to MoMeCare Foundation, the smart way to remind you of your hospital needs.</string>
+    <string name="tutorial_two">Automated Reminders</string>
+    <string name="tutorial_two_message">Received automated calls in your own language of the needed health needs on regular basis.</string>
     <!--end of the onboarding-->
 
     <!--the menu section-->

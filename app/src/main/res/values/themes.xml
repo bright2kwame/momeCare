@@ -12,8 +12,17 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+
+        <item name="android:windowBackground">@color/colorBackground</item>
+
+    </style>
+
+    <style name="Theme.FullScreen" parent="Theme.MoMECAREFoundation">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
@@ -65,6 +74,39 @@
         <item name="boxCornerRadiusBottomStart">@dimen/corner_radius</item>
         <item name="boxCornerRadiusTopEnd">@dimen/corner_radius</item>
         <item name="boxCornerRadiusTopStart">@dimen/corner_radius</item>
+    </style>
+
+    <!--    the card properties and style-->
+    <style name="MaterialCardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">@dimen/corner_radius</item>
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="rippleColor">@color/colorPrimary</item>
+        <item name="cardMaxElevation">@dimen/card_elevation</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="contentPadding">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginLeft">@dimen/negative_item_margin</item>
+        <item name="android:layout_marginRight">@dimen/negative_item_margin</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <!--    the card properties and style-->
+    <style name="BaseCardViewStyle" parent="MaterialCardViewStyle">
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">@dimen/corner_radius</item>
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardMaxElevation">@dimen/card_elevation</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="cardUseCompatPadding">false</item>
+        <item name="contentPadding">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginLeft">@dimen/negative_item_margin</item>
+        <item name="android:layout_marginRight">@dimen/negative_item_margin</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:padding">0dp</item>
     </style>
 
 

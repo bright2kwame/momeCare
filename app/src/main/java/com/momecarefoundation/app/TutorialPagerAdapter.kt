@@ -18,12 +18,12 @@ class TutorialPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, 
     companion object {
 
         // Images resources
-        private val IMAGE_RES_IDS = intArrayOf(R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher)
+        private val IMAGE_RES_IDS = intArrayOf(R.mipmap.ic_launcher, R.mipmap.ic_launcher)
 
-        // Text resources
-        private val TITLES_RES_IDS = intArrayOf(R.string.tutorial_one, R.string.tutorial_three, R.string.tutorial_four, R.string.tutorial_two)
+        // title resources
+        private val TITLES_RES_IDS = intArrayOf(R.string.tutorial_one, R.string.tutorial_two)
 
-        // Text resources
-        private val MESSAGE_RES_IDS = intArrayOf(R.string.tutorial_one_message, R.string.tutorial_three_message, R.string.tutorial_four_message, R.string.tutorial_two_message)
+        // message resources
+        private val MESSAGE_RES_IDS = intArrayOf(R.string.tutorial_one_message, R.string.tutorial_two_message)
     }
 }

@@ -6,6 +6,7 @@
     <color name="colorOnSurface">#FF000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorSecondary">#0054d0</color>
     <color name="colorSecondaryDark">#006aed</color>
     <color name="colorLightDark">#555353</color>
@@ -18,4 +19,5 @@
     <color name="secondaryDarkColor">#002d9e</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
+    <color name="colorBackground">#FBFAFB</color>
 </resources>

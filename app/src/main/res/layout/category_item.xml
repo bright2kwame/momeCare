@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/materialCardView"
+    style="@style/BaseCardViewStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/item_margin">
+
+        <ImageView
+            android:id="@+id/imageViewCategoryIcon"
+            android:layout_width="@dimen/category_icon_height"
+            android:layout_height="@dimen/category_icon_height"
+            android:background="@drawable/bordered_small_shape"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageViewCategory"
+            android:layout_width="@dimen/category_inner_icon_height"
+            android:layout_height="@dimen/category_inner_icon_height"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewCategoryIcon"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewCategoryIcon"
+            app:layout_constraintRight_toRightOf="@+id/imageViewCategoryIcon"
+            app:layout_constraintStart_toStartOf="@+id/imageViewCategoryIcon"
+            app:layout_constraintTop_toTopOf="@+id/imageViewCategoryIcon" />
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_marginTop="@dimen/item_margin"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:maxLines="1"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewCategoryIcon" />
+
+        <TextView
+            android:id="@+id/textViewInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/app_name"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorLightDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

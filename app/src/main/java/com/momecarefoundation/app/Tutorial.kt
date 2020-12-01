@@ -1,5 +1,6 @@
 package com.momecarefoundation.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.momecarefoundation.app.extension.autoScroll
@@ -15,6 +16,12 @@ class Tutorial : AppCompatActivity() {
         tutorialPager!!.offscreenPageLimit = 4
         tutorialPager!!.adapter = TutorialPagerAdapter(supportFragmentManager)
         circleIndicator.setupWithViewPager(tutorialPager, true)
+
+
+        buttonSignIn.setOnClickListener {
+            startActivity(Intent(this,Home::class.java))
+            finish()
+        }
 
         tutorialPager.autoScroll(3000)
     }
