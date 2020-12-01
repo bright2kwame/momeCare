@@ -27,8 +27,8 @@ open class User(
     }
 
     // save a user model
-    fun saveUser(userModel: User) {
-        userModel.save()
+    fun save(item: User) {
+        item.save()
     }
 
     // query a single first item
@@ -36,24 +36,6 @@ open class User(
         return User().queryFirst()
     }
 
-
-    // MARK: remove the token
-    fun removeToken() {
-        val user = User().queryFirst()
-        user?.token = ""
-        if (user != null) {
-            saveUser(user)
-        }
-    }
-
-    // MARK: update the user
-    fun updateUserNumber(number: String) {
-        val user = User().queryFirst()
-        user?.number = number
-        if (user != null) {
-            saveUser(user)
-        }
-    }
 
     private fun toJSON(): String {
         val jsonObject = JSONObject()

@@ -1,8 +1,6 @@
 package com.momecarefoundation.app.model
 
-import com.vicpin.krealmextensions.deleteAll
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
+import com.vicpin.krealmextensions.*
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import org.json.JSONException
@@ -13,58 +11,51 @@ import org.json.JSONObject
  */
 open class Response(
     @PrimaryKey var id: String = "",
-    var token: String = "",
-    var number: String = "",
-    var email: String = "",
-    var firstName: String = "",
-    var lastName: String = "",
-    var profile: String = "",
+    var code: String = "",
+    var respondentNumber: String = "",
+    var respondentFirstName: String = "",
+    var respondentLastName: String = "",
+    var survey: String = "",
+    var answer: String = "",
+    var isBackedUp: Boolean = false
 ) : RealmObject() {
 
-    // clear all objects from UserModel.class
+    // clear all objects from Respondent.class
     fun clearAll() {
         Response().deleteAll()
     }
 
-    // save a user model
-    fun saveUser(userModel: Response) {
-        userModel.save()
+    // save a respondent
+    fun save(item: Response) {
+        item.save()
     }
 
     // query a single first item
-    fun getUser(): Response? {
-        return Response().queryFirst()
+    fun getResponse(id: String): Response? {
+        return Response().queryFirst { equalTo("id", id) }
     }
 
-
-    // MARK: remove the token
-    fun removeToken() {
-        val user = Response().queryFirst()
-        user?.token = ""
-        if (user != null) {
-            saveUser(user)
-        }
+    // save all items
+    fun saveAll(all: List<Response>) {
+        all.saveAll()
     }
 
-    // MARK: update the user
-    fun updateUserNumber(number: String) {
-        val user = Response().queryFirst()
-        user?.number = number
-        if (user != null) {
-            saveUser(user)
-        }
+    // get all
+    fun all() {
+        Response().queryAll()
     }
 
     private fun toJSON(): String {
         val jsonObject = JSONObject()
         return try {
             jsonObject.put("id", id)
-            jsonObject.put("phone_number", number)
-            jsonObject.put("email", email)
-            jsonObject.put("avatar", profile)
-            jsonObject.put("first_name", firstName)
-            jsonObject.put("last_name", lastName)
-            jsonObject.put("profile", profile)
+            jsonObject.put("code", code)
+            jsonObject.put("respondent_number", respondentNumber)
+            jsonObject.put("respondent_first_name", respondentFirstName)
+            jsonObject.put("respondent_last_name", respondentLastName)
+            jsonObject.put("survey", survey)
+            jsonObject.put("answer", answer)
+            jsonObject.put("backed_up", isBackedUp)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()

@@ -18,7 +18,7 @@ class TutorialPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, 
     companion object {
 
         // Images resources
-        private val IMAGE_RES_IDS = intArrayOf(R.mipmap.ic_launcher, R.mipmap.ic_launcher)
+        private val IMAGE_RES_IDS = intArrayOf(R.drawable.ic_motherhood, R.drawable.ic_medicine)
 
         // title resources
         private val TITLES_RES_IDS = intArrayOf(R.string.tutorial_one, R.string.tutorial_two)

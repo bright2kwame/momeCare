@@ -19,7 +19,7 @@ class Login : AppCompatActivity() {
 
 
         buttonSignIn.setOnClickListener {
-            val phoneNumber = editTextEmailAddress.text.toString().trim()
+            val phoneNumber = editTextPhoneNumber.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
 
             if (phoneNumber.isEmpty() || password.isEmpty()) {
@@ -30,7 +30,7 @@ class Login : AppCompatActivity() {
         }
 
         textViewPassword.setOnClickListener {
-            val phoneNumber = editTextEmailAddress.text.toString().trim()
+            val phoneNumber = editTextPhoneNumber.text.toString().trim()
 
             if (phoneNumber.isEmpty()) {
                 AppPresenter(this).showMessage(message = "Provide a phone number to reset password")

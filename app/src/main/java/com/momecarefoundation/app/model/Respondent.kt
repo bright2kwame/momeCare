@@ -1,8 +1,6 @@
 package com.momecarefoundation.app.model
 
-import com.vicpin.krealmextensions.deleteAll
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
+import com.vicpin.krealmextensions.*
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import org.json.JSONException
@@ -13,22 +11,21 @@ import org.json.JSONObject
  */
 open class Respondent(
     @PrimaryKey var id: String = "",
-    var token: String = "",
-    var number: String = "",
-    var email: String = "",
     var firstName: String = "",
     var lastName: String = "",
+    var phone: String = "",
     var profile: String = "",
+    var isBackedUp: Boolean = false,
 ) : RealmObject() {
 
-    // clear all objects from UserModel.class
+    // clear all objects from Respondent.class
     fun clearAll() {
         Respondent().deleteAll()
     }
 
-    // save a user model
-    fun saveUser(userModel: Respondent) {
-        userModel.save()
+    // save a respondent
+    fun save(item: Respondent) {
+        item.save()
     }
 
     // query a single first item
@@ -36,35 +33,25 @@ open class Respondent(
         return Respondent().queryFirst()
     }
 
-
-    // MARK: remove the token
-    fun removeToken() {
-        val user = Respondent().queryFirst()
-        user?.token = ""
-        if (user != null) {
-            saveUser(user)
-        }
+    // save all items
+    fun saveAll(all: List<Respondent>) {
+        all.saveAll()
     }
 
-    // MARK: update the user
-    fun updateUserNumber(number: String) {
-        val user = Respondent().queryFirst()
-        user?.number = number
-        if (user != null) {
-            saveUser(user)
-        }
+    // get all
+    fun all() {
+        Respondent().queryAll()
     }
+
 
     private fun toJSON(): String {
         val jsonObject = JSONObject()
         return try {
             jsonObject.put("id", id)
-            jsonObject.put("phone_number", number)
-            jsonObject.put("email", email)
-            jsonObject.put("avatar", profile)
             jsonObject.put("first_name", firstName)
             jsonObject.put("last_name", lastName)
-            jsonObject.put("profile", profile)
+            jsonObject.put("phone", phone)
+            jsonObject.put("backed_up", isBackedUp)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()

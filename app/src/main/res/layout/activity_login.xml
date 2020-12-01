@@ -19,11 +19,11 @@
 
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/BaseCardViewStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/activity_horizontal_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/BaseCardViewStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewLogo">
@@ -41,8 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:text="Sign In"
@@ -62,40 +62,40 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutEmailAddress"
+                android:id="@+id/textInputLayoutPhoneNumber"
+                style="@style/MaterialTextTextInputRoundedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewMessage"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                style="@style/MaterialTextTextInputRoundedStyle"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin">
 
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextEmailAddress"
+                    android:id="@+id/editTextPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:hint="Enter email address"
-                    android:singleLine="true"
+                    android:hint="Enter phone number"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
+                    android:inputType="phone"
+                    android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutPassword"
+                style="@style/MaterialTextTextInputRoundedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textInputLayoutEmailAddress"
+                android:layout_below="@+id/textInputLayoutPhoneNumber"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                style="@style/MaterialTextTextInputRoundedStyle"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin">
 
@@ -107,21 +107,21 @@
                     android:gravity="center_vertical"
                     android:hint="Enter password"
                     android:imeOptions="actionDone"
-                    android:singleLine="true"
                     android:inputType="textPassword"
+                    android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/textViewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textInputLayoutPassword"
                 android:layout_centerInParent="true"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_below="@+id/textInputLayoutPassword"
-                android:layout_width="wrap_content"
                 android:text="Forgot Password?"
-                android:textColor="@color/colorPrimary"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/colorPrimary" />
 
 
             <com.google.android.material.button.MaterialButton
