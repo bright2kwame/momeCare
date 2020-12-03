@@ -5,6 +5,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
 
 /**
  * Created by Monarchy on 10/10/2017.
@@ -15,6 +16,10 @@ open class Respondent(
     var lastName: String = "",
     var phone: String = "",
     var profile: String = "",
+    var dateOfBirth: Date? = null,
+    var locationLat: String = "",
+    var locationLon: String = "",
+    var locationName: String = "",
     var isBackedUp: Boolean = false,
 ) : RealmObject() {
 
@@ -23,19 +28,37 @@ open class Respondent(
         Respondent().deleteAll()
     }
 
+    // clear all objects saved
+    fun clearAllSaved() {
+        Respondent().delete { equalTo("isBackedUp", true) }
+    }
+
     // save a respondent
     fun save(item: Respondent) {
         item.save()
     }
 
     // query a single first item
-    fun getUser(): Respondent? {
-        return Respondent().queryFirst()
+    fun getItem(id: String): Respondent? {
+        return Respondent().queryFirst { equalTo("id", id) }
     }
 
     // save all items
     fun saveAll(all: List<Respondent>) {
         all.saveAll()
+    }
+
+    // query all offline items
+    fun allOfflineRespondents(): List<Respondent> {
+        return Respondent().query { equalTo("isBackedUp", false) }
+    }
+
+    // update all as updated
+    fun updateLocalRespondentStatus(all: List<Respondent>) {
+        all.forEach {
+            it.isBackedUp = true
+            save(it)
+        }
     }
 
     // get all
@@ -53,6 +76,10 @@ open class Respondent(
             jsonObject.put("phone", phone)
             jsonObject.put("backed_up", isBackedUp)
             jsonObject.put("profile", profile)
+            jsonObject.put("latitude", locationLat)
+            jsonObject.put("longitude", locationLon)
+            jsonObject.put("location_name", locationName)
+            jsonObject.put("date_of_birth", dateOfBirth)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()

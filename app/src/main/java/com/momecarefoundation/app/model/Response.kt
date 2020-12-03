@@ -17,12 +17,20 @@ open class Response(
     var respondentLastName: String = "",
     var survey: String = "",
     var answer: String = "",
+    var locationLat: String = "",
+    var locationLon: String = "",
+    var locationName: String = "",
     var isBackedUp: Boolean = false
 ) : RealmObject() {
 
     // clear all objects from Respondent.class
     fun clearAll() {
         Response().deleteAll()
+    }
+
+    // clear all objects saved
+    fun clearAllSaved() {
+        Response().delete { equalTo("isBackedUp", true) }
     }
 
     // save a respondent
@@ -33,6 +41,19 @@ open class Response(
     // query a single first item
     fun getResponse(id: String): Response? {
         return Response().queryFirst { equalTo("id", id) }
+    }
+
+    // query all offline items
+    fun allOfflineResponse(): List<Response> {
+        return Response().query { equalTo("isBackedUp", false) }
+    }
+
+    // update all as updated
+    fun updateLocalResponseStatus(all: List<Response>) {
+        all.forEach {
+            it.isBackedUp = true
+            save(it)
+        }
     }
 
     // save all items
@@ -56,6 +77,9 @@ open class Response(
             jsonObject.put("survey", survey)
             jsonObject.put("answer", answer)
             jsonObject.put("backed_up", isBackedUp)
+            jsonObject.put("latitude", locationLat)
+            jsonObject.put("longitude", locationLon)
+            jsonObject.put("location_name", locationName)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()
