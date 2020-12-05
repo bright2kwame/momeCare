@@ -14,7 +14,9 @@ open class Survey(
     var name: String = "",
     var info: String = "",
     var numberOfResponse: Int = 0,
+    var numberOfQuestions: Int = 0,
     var icon: String = "",
+    var questions: String = "",
 ) : RealmObject() {
 
     // clear all objects from UserModel.class
@@ -38,8 +40,8 @@ open class Survey(
     }
 
     // get all
-    fun all() {
-        Survey().queryAll()
+    fun all(): List<Survey> {
+        return Survey().queryAll()
     }
 
     private fun toJSON(): String {
@@ -48,7 +50,9 @@ open class Survey(
             jsonObject.put("id", id)
             jsonObject.put("name", name)
             jsonObject.put("info", info)
-            jsonObject.put("number_of_response", numberOfResponse)
+            jsonObject.put("numberOfResponse", numberOfResponse)
+            jsonObject.put("numberOfResponse", numberOfQuestions)
+            jsonObject.put("questions", questions)
             jsonObject.put("icon", icon)
             jsonObject.toString()
         } catch (e: JSONException) {

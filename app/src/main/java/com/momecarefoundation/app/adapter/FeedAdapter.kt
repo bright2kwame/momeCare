@@ -11,6 +11,7 @@ import com.momecarefoundation.app.model.Category
 import com.momecarefoundation.app.model.Respondent
 import com.momecarefoundation.app.model.Response
 import com.momecarefoundation.app.model.Survey
+import com.momecarefoundation.app.util.Utility
 import com.squareup.picasso.Picasso
 
 /**
@@ -87,6 +88,22 @@ class FeedAdapter(private var items: List<Any>, private var adapterCallback: Ada
     // MARK: configure the category
     private fun configureCategoryViewHolder(viewHolder: ViewHolderCategory, data: Category) {
         val parent = viewHolder.itemView
+        val textViewName = viewHolder.textViewName
+        val textViewInfo = viewHolder.textViewInfo
+        val imageViewCategory = viewHolder.imageViewCategory
+        val imageViewCategoryIcon = viewHolder.imageViewCategoryIcon
+
+        textViewName?.text = data.name
+        textViewInfo?.text = data.info
+        if (data.icon.isNotEmpty()) {
+            Picasso.get().load(data.icon).into(imageViewCategory)
+        } else {
+            val textDrawable = Utility().getLetterView(parent.context, data.name, 24, null, false)
+            imageViewCategory?.setImageDrawable(textDrawable)
+        }
+        parent.setOnClickListener {
+            adapterCallback.onActionPerformed("", viewHolder.adapterPosition)
+        }
 
     }
 
@@ -105,6 +122,25 @@ class FeedAdapter(private var items: List<Any>, private var adapterCallback: Ada
     // MARK: configure the survey
     private fun configureSurveyViewHolder(viewHolder: ViewHolderSurvey, data: Survey) {
         val parent = viewHolder.itemView
+        val textViewName = viewHolder.textViewName
+        val textViewInfo = viewHolder.textViewInfo
+        val imageViewIcon = viewHolder.imageViewIcon
+        val imageViewAction = viewHolder.imageViewAction
+        val textViewResponds = viewHolder.textViewResponds
 
+        textViewName?.text = data.name
+        textViewInfo?.text = data.info
+        textViewResponds?.text = Utility().formatItem(data.numberOfResponse, "Respond")
+
+        if (data.icon.isNotEmpty()) {
+            Picasso.get().load(data.icon).into(imageViewIcon)
+        } else {
+            val textDrawable = Utility().getLetterView(parent.context, data.name, 80, null, false)
+            imageViewIcon?.setImageDrawable(textDrawable)
+        }
+
+        imageViewAction?.setOnClickListener {
+            adapterCallback.onActionPerformed(data, viewHolder.adapterPosition)
+        }
     }
 }

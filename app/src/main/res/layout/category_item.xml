@@ -8,6 +8,7 @@
     android:layout_height="wrap_content"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginTop="@dimen/item_spacing"
     app:layout_constraintStart_toStartOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,6 +28,7 @@
             android:id="@+id/imageViewCategory"
             android:layout_width="@dimen/category_inner_icon_height"
             android:layout_height="@dimen/category_inner_icon_height"
+
             app:layout_constraintBottom_toBottomOf="@+id/imageViewCategoryIcon"
             app:layout_constraintEnd_toEndOf="@+id/imageViewCategoryIcon"
             app:layout_constraintRight_toRightOf="@+id/imageViewCategoryIcon"

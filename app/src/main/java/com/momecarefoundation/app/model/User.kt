@@ -14,10 +14,12 @@ import org.json.JSONObject
 open class User(
     @PrimaryKey var id: String = "",
     var token: String = "",
+    var username: String = "",
     var number: String = "",
     var email: String = "",
     var firstName: String = "",
     var lastName: String = "",
+    var fullName: String = "",
     var profile: String = "",
 ) : RealmObject() {
 
@@ -47,6 +49,8 @@ open class User(
             jsonObject.put("first_name", firstName)
             jsonObject.put("last_name", lastName)
             jsonObject.put("profile", profile)
+            jsonObject.put("username", username)
+            jsonObject.put("full_name", fullName)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()

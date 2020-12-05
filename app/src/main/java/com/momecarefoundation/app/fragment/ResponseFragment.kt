@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.momecarefoundation.app.R
 
 
-class HomeFragment : Fragment() {
+class ResponseFragment : Fragment() {
 
 
     @Nullable

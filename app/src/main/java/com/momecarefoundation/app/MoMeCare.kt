@@ -35,9 +35,12 @@ class MoMeCare : Application() {
             .schemaVersion(1)
             .migration(MoMeCareMigration())
             .deleteRealmIfMigrationNeeded()
+            .allowQueriesOnUiThread(true)
+            .allowWritesOnUiThread(true)
             .build()
 
         Realm.setDefaultConfiguration(realmConfiguration)
+
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(

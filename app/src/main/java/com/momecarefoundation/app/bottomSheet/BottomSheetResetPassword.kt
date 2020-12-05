@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.momecarefoundation.app.R
 import com.momecarefoundation.app.api.APICall
+import com.momecarefoundation.app.callback.BaseInterface
 import com.momecarefoundation.app.callback.PresenterCallback
 import com.momecarefoundation.app.callback.UserCallback
+import com.momecarefoundation.app.model.User
 import com.momecarefoundation.app.util.AppPresenter
 import kotlinx.android.synthetic.main.bottom_sheet_reset_password.*
 
@@ -35,6 +37,31 @@ class BottomSheetResetPassword : RoundedBottomSheetDialogFragment(), View.OnClic
                 AppPresenter(this.requireContext()).showMessage(message = "Passwords do not match")
                 return
             }
+
+
+            progressBar.visibility = View.VISIBLE
+            buttonResetPassword.isEnabled = false
+
+            APICall(requireContext()).passwordReset(code, password, object : BaseInterface {
+
+                override fun onReceivedDetail(message: String) {
+                    super.onReceivedDetail(message)
+                    AppPresenter(requireContext()).showMessage(message = message)
+                    dismiss()
+                }
+
+                override fun onRequestEnded() {
+                    super.onRequestEnded()
+
+                    progressBar.visibility = View.VISIBLE
+                    buttonResetPassword.isEnabled = true
+                }
+
+                override fun onReceivedError(error: String) {
+                    super.onReceivedError(error)
+                    AppPresenter(requireContext()).showMessage(message = error)
+                }
+            })
 
 
         }
@@ -69,12 +96,22 @@ class BottomSheetResetPassword : RoundedBottomSheetDialogFragment(), View.OnClic
         progressBar.visibility = View.VISIBLE
         buttonResetPassword.isEnabled = false
 
-        APICall(activity!!).initPasswordReset(number, object : UserCallback {
+        APICall(requireActivity()).initPasswordReset(number, object : BaseInterface {
             override fun onRequestEnded() {
                 super.onRequestEnded()
 
                 progressBar.visibility = View.INVISIBLE
                 buttonResetPassword.isEnabled = true
+            }
+
+            override fun onReceivedDetail(message: String) {
+                super.onReceivedDetail(message)
+                AppPresenter(requireContext()).showMessage(message = message)
+            }
+
+            override fun onReceivedError(error: String) {
+                super.onReceivedError(error)
+                AppPresenter(requireContext()).showMessage(message = error)
             }
         })
 

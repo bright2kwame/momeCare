@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import androidx.preference.PreferenceManager
+import com.momecarefoundation.app.model.User
 import java.util.*
 
 class Splash : AppCompatActivity() {
@@ -25,9 +26,9 @@ class Splash : AppCompatActivity() {
     // MARK: animation on the activities
     private fun navigate() {
         val intent = Intent()
-        val hasLoggedIn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("", false)
+        val noUser = User().getUser() == null
         when {
-            !hasLoggedIn -> {
+            noUser -> {
                 intent.setClass(this, Tutorial::class.java)
             }
             else -> {

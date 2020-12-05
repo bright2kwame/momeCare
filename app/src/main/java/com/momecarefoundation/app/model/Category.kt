@@ -13,6 +13,7 @@ open class Category(
     @PrimaryKey var id: String = "",
     var name: String = "",
     var icon: String = "",
+    var numOfSurveys: Int = 0,
     var info: String = "",
 ) : RealmObject() {
 
@@ -22,8 +23,8 @@ open class Category(
     }
 
     // clear all objects from Category.class
-    fun all() {
-        Category().queryAll()
+    fun all(): List<Category> {
+       return Category().queryAll()
     }
 
     // save a user model
@@ -49,6 +50,7 @@ open class Category(
             jsonObject.put("name", name)
             jsonObject.put("icon", icon)
             jsonObject.put("info", info)
+            jsonObject.put("numOfSurveys", numOfSurveys)
             jsonObject.toString()
         } catch (e: JSONException) {
             e.printStackTrace()

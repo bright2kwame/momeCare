@@ -6,3 +6,17 @@ enum class NetworkRequestMethod {
     DELETE,
     PUT
 }
+
+enum class QuestionType {
+    SINGLE_SELECT_MULTIPLE_CHOICE,
+    MULTI_SELECT_MULTIPLE_CHOICE,
+    OPEN_ENDED,
+    DATE
+}
+
+enum class LanguageOptions {
+    English,
+    Twi,
+    Ewe,
+    Sefwi
+}

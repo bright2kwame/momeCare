@@ -22,10 +22,11 @@ class AppPresenter(var context: Context) {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveAction) { dialog, _ ->
-                presenterCallback?.onActionSelected("")
+                presenterCallback?.onActionSelected(positiveAction!!)
                 dialog.dismiss()
             }
             .setNegativeButton(negativeActive) { dialog, _ ->
+                presenterCallback?.onActionSelected(negativeActive!!)
                 dialog.dismiss()
             }
             .show()
@@ -35,7 +36,8 @@ class AppPresenter(var context: Context) {
     fun showList(
         title: String? = context.getString(R.string.app_name),
         items: Array<String>,
-        presenterCallback: PresenterCallback? = null){
+        presenterCallback: PresenterCallback? = null
+    ) {
 
         materialAlertDialogBuilder
             .setTitle(title)
@@ -52,7 +54,8 @@ class AppPresenter(var context: Context) {
         items: Array<String>,
         positiveAction: String? = "OK",
         negativeActive: String? = "CANCEL",
-        presenterCallback: PresenterCallback? = null){
+        presenterCallback: PresenterCallback? = null
+    ) {
         val checkedItem = 1
 
         materialAlertDialogBuilder

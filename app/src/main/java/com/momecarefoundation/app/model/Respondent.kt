@@ -15,11 +15,18 @@ open class Respondent(
     var firstName: String = "",
     var lastName: String = "",
     var phone: String = "",
-    var profile: String = "",
     var dateOfBirth: Date? = null,
-    var locationLat: String = "",
-    var locationLon: String = "",
-    var locationName: String = "",
+    var recentDeliveryDate: Date? = null,
+    var languageSpoken: String = "",
+    var community: String = "",
+    var hasDeliveredRecentChildAtRegisteredHospital: String = "",
+    var reasonIfNotDeliveredAtHospital: String = "",
+    var hasAttendedAllScheduledChildWeighings: String = "",
+    var reasonIfNotAttendedAllWeighings: String = "",
+    var numberOfExclusiveBreastFeedingMonths: String = "",
+    var reasonIfLessThanSixMonths: String = "",
+    var ageOfEldestChild: String = "",
+    var receivePhoneCallReminders: String = "",
     var isBackedUp: Boolean = false,
 ) : RealmObject() {
 
@@ -43,6 +50,11 @@ open class Respondent(
         return Respondent().queryFirst { equalTo("id", id) }
     }
 
+    //delete first item
+    fun deleteItem(id: String) {
+        Respondent().deleteItem(id = id)
+    }
+
     // save all items
     fun saveAll(all: List<Respondent>) {
         all.saveAll()
@@ -62,8 +74,8 @@ open class Respondent(
     }
 
     // get all
-    fun all() {
-        Respondent().queryAll()
+    fun all(): List<Respondent> {
+        return Respondent().queryAll()
     }
 
 
@@ -75,10 +87,6 @@ open class Respondent(
             jsonObject.put("last_name", lastName)
             jsonObject.put("phone", phone)
             jsonObject.put("backed_up", isBackedUp)
-            jsonObject.put("profile", profile)
-            jsonObject.put("latitude", locationLat)
-            jsonObject.put("longitude", locationLon)
-            jsonObject.put("location_name", locationName)
             jsonObject.put("date_of_birth", dateOfBirth)
             jsonObject.toString()
         } catch (e: JSONException) {

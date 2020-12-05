@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.momecarefoundation.app.fragment.HomeFragment
+import com.momecarefoundation.app.fragment.*
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -45,12 +45,12 @@ class Home : AppCompatActivity() {
 
         //MARK: set the selected
         bottomNavigation.selectedItemId = R.id.pageSurveys
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().replace(
-                R.id.fragmentContainer,
-                HomeFragment()
-            ).commit()
-        }
+//        if (savedInstanceState == null) {
+//            supportFragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragmentContainer, SurveyFragment()
+//            ).commit()
+//        }
 
 
         when (PackageManager.PERMISSION_GRANTED) {
@@ -70,23 +70,28 @@ class Home : AppCompatActivity() {
     //MARK: create a listener for the bottom navigation
     private val navListener: BottomNavigationView.OnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            var selectedFragment: Fragment? = HomeFragment()
+            var selectedFragment: Fragment? = SurveyFragment()
             when (item.itemId) {
                 R.id.pageGroups -> {
-                    selectedFragment = HomeFragment()
+                    selectedFragment = CategoryFragment()
                 }
                 R.id.pageSurveys -> {
-                    selectedFragment = HomeFragment()
+                    selectedFragment = SurveyFragment()
                 }
                 R.id.pageResponds -> {
-                    selectedFragment = HomeFragment()
+                    selectedFragment = ResponseFragment()
+                }
+                R.id.pageRespondents -> {
+                    selectedFragment = RespondentFragment()
+                }
+                R.id.pageAccount -> {
+                    selectedFragment = ProfileFragment()
                 }
             }
-            supportFragmentManager.beginTransaction().replace(
-                R.id.fragmentContainer,
-                selectedFragment!!
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, selectedFragment!!
             ).commit()
             true
         }
-
 }

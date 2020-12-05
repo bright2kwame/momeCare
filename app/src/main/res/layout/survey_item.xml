@@ -5,9 +5,7 @@
     style="@style/BaseCardViewStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
+    android:layout_marginTop="@dimen/margin_small">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,8 +38,8 @@
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginTop="@dimen/item_margin"
-            android:maxLines="1"
             android:gravity="center_vertical"
+            android:maxLines="1"
             android:text="@string/app_name"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,28 +64,30 @@
             android:id="@+id/textViewResponds"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
+            android:gravity="center_vertical"
             android:maxLines="1"
             android:text="100 K Responds"
             android:textColor="@color/colorLightDark"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewAction"
             app:layout_constraintEnd_toStartOf="@+id/imageViewAction"
             app:layout_constraintStart_toEndOf="@+id/imageViewIcon"
-            app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
+            app:layout_constraintTop_toTopOf="@+id/imageViewAction" />
 
         <ImageView
             android:id="@+id/imageViewAction"
-            android:padding="4dp"
-            app:tint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_responds"
             android:layout_width="@dimen/survey_action_icon_height"
             android:layout_height="@dimen/survey_action_icon_height"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="2dp"
+            android:padding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewInfo"
+            app:srcCompat="@drawable/ic_responds"
+            app:tint="@color/colorPrimary" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
