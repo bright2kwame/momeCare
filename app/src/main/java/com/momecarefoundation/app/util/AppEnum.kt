@@ -20,3 +20,7 @@ enum class LanguageOptions {
     Ewe,
     Sefwi
 }
+
+enum class CommunityOptions {
+    Asawinso,Atsiekpoe,Deveme,Vume
+}

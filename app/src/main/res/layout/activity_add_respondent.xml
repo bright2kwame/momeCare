@@ -159,26 +159,52 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutAgeEldersSon"
+                style="@style/MaterialTextTextInputRoundedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRecentDeliveryDate">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextRecentEldersSon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:hint="Age of Oldest Song"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutLanguage"
                 style="@style/MaterialTextTextInputRoundedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRecentDeliveryDate"
+                app:endIconTint="@color/colorLightDark"
+                android:hint="Language"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAgeEldersSon"
                 app:layout_constraintWidth_percent="0.49">
 
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/editTextLanguage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:gravity="center_vertical"
-                    android:hint="Language Spoken"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:singleLine="true"
+                    android:inputType="textPersonName"
+                    android:padding="@dimen/activity_horizontal_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -187,22 +213,24 @@
                 style="@style/MaterialTextTextInputRoundedStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:endIconTint="@color/colorLightDark"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:hint="Community"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutRecentDeliveryDate"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAgeEldersSon"
                 app:layout_constraintWidth_percent="0.49">
 
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/editTextCommunity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:gravity="center_vertical"
-                    android:hint="Community"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:singleLine="true"
+                    android:inputType="textPersonName"
+                    android:padding="@dimen/activity_horizontal_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
 
             </com.google.android.material.textfield.TextInputLayout>
 

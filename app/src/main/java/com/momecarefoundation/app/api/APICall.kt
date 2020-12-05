@@ -48,7 +48,7 @@ class APICall(private var context: Context) {
         }
         respondentData.put(
             "data",
-            respondentDataContent.toString().replace("[", "").replace("]", "")
+            respondentDataContent.toString()
         )
         val url = baseUrl.plus("respondents/bulk_upload_respondent/")
 
@@ -79,7 +79,7 @@ class APICall(private var context: Context) {
         }
         responseData.put(
             "data",
-            responseDataContent.toString().replace("[", "").replace("]", "")
+            responseDataContent.toString()
         )
         val urlResponse = baseUrl.plus("response/bulk_upload_response/")
 
@@ -296,43 +296,50 @@ class APICall(private var context: Context) {
 
     private fun formatResponse(response: Response): JSONObject {
         val postData = JSONObject()
-        postData.put("first_name", response.answer)
+        postData.put("survey_id", response.survey)
+        postData.put("response", response.answer)
+        postData.put("respondent", response.respondent)
+        postData.put("location_name", response.locationName)
+        postData.put("latitude", response.locationLat)
+        postData.put("longitude", response.locationLon)
         return postData
     }
 
     private fun formatRespondent(respondent: Respondent): JSONObject {
-        val postData = JSONObject()
-        postData.put("first_name", respondent.firstName)
-        postData.put("last_name", respondent.lastName)
-        postData.put("date_of_birth", respondent.dateOfBirth?.toString("YYYY-MM-DD"))
-        postData.put("recent_delivery_date", respondent.recentDeliveryDate?.toString("YYYY-MM-DD"))
-        postData.put("phone_number", respondent.phone)
-        postData.put("language_spoken", respondent.languageSpoken)
-        postData.put("community", respondent.community)
-        postData.put(
-            "has_delivered_recent_child_at_registered_hospital",
-            respondent.hasDeliveredRecentChildAtRegisteredHospital
-        )
-        postData.put(
-            "reason_if_not_delivered_at_hospital",
-            respondent.reasonIfNotDeliveredAtHospital
-        )
-        postData.put(
-            "has_attended_all_scheduled_child_weighings",
-            respondent.hasAttendedAllScheduledChildWeighings
-        )
-        postData.put(
-            "reason_if_not_attended_all_weighings",
-            respondent.reasonIfNotAttendedAllWeighings
-        )
-        postData.put(
-            "number_of_exclusive_breastfeeding_months",
-            respondent.numberOfExclusiveBreastFeedingMonths
-        )
-        postData.put("reason_if_less_than_six_months", respondent.reasonIfLessThanSixMonths)
-        postData.put("age_of_eldest_child", respondent.ageOfEldestChild)
-        postData.put("receive_phone_call_reminders", respondent.receivePhoneCallReminders)
-        return postData
+        return respondent.parseToJson()
+    }
+
+    //MARK: create respondents
+    fun createResponse(responseData: Response? = null, callback: ResponseCallback) {
+        var postData = JSONObject()
+        responseData?.let {
+            postData = formatResponse(it)
+            Response().save(it)
+        }
+        val url = baseUrl.plus("respondents/submit_survey_response/")
+        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, postData,
+            { response ->
+                Log.e(tag, response.toString())
+                callback.onRequestEnded()
+                val responseCode = response.getString("response_code")
+                if (responseCode == "100") {
+                    //MARK: delete local date
+                    responseData?.let {
+                        Response().deleteItem(it.id)
+                    }
+                }
+            },
+            { error ->
+                callback.onRequestEnded()
+                Log.e(tag, error.toString())
+                callback.onReceivedError(genericError)
+            }
+        ) {
+            override fun getHeaders(): Map<String, String> {
+                return customHeader()
+            }
+        }
+        requestQueue.add(jsonObjectRequest)
     }
 
     //MARK: create respondents
@@ -349,15 +356,10 @@ class APICall(private var context: Context) {
                 callback.onRequestEnded()
                 val responseCode = response.getString("response_code")
                 if (responseCode == "100") {
-                    val results = response.getJSONObject("results")
-                    callback.onReceivedItem(parseRespondent(results))
-                } else {
-                    val detail = response.getString("detail")
-                    callback.onReceivedError(detail)
-                }
-                //MARK: delete local date
-                respondent?.let {
-                    Respondent().deleteItem(it.id)
+                    //MARK: delete local data
+                    respondent?.let {
+                        Respondent().deleteItem(it.id)
+                    }
                 }
             },
             { error ->

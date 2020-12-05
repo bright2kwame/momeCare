@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/colorWhite"
+    android:ellipsize="end"
+    android:gravity="start"
+    android:maxLines="1"
+    android:paddingTop="@dimen/margin_small"
+    android:paddingStart="@dimen/margin_small"
+    android:paddingLeft="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_small"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:text="@string/app_name"
+    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />

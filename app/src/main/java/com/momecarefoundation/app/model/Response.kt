@@ -11,14 +11,11 @@ import org.json.JSONObject
  */
 open class Response(
     @PrimaryKey var id: String = "",
-    var code: String = "",
-    var respondentNumber: String = "",
-    var respondentFirstName: String = "",
-    var respondentLastName: String = "",
     var survey: String = "",
     var answer: String = "",
-    var locationLat: String = "",
-    var locationLon: String = "",
+    var respondent: String = "",
+    var locationLat: Double = 0.0,
+    var locationLon: Double = 0.0,
     var locationName: String = "",
     var isBackedUp: Boolean = false
 ) : RealmObject() {
@@ -41,6 +38,11 @@ open class Response(
     // query a single first item
     fun getResponse(id: String): Response? {
         return Response().queryFirst { equalTo("id", id) }
+    }
+
+    //delete first item
+    fun deleteItem(id: String) {
+        Response().deleteItem(id = id)
     }
 
     // query all offline items
@@ -70,10 +72,6 @@ open class Response(
         val jsonObject = JSONObject()
         return try {
             jsonObject.put("id", id)
-            jsonObject.put("code", code)
-            jsonObject.put("respondent_number", respondentNumber)
-            jsonObject.put("respondent_first_name", respondentFirstName)
-            jsonObject.put("respondent_last_name", respondentLastName)
             jsonObject.put("survey", survey)
             jsonObject.put("answer", answer)
             jsonObject.put("backed_up", isBackedUp)

@@ -1,15 +1,19 @@
 package com.momecarefoundation.app
 
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -18,10 +22,18 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.JsonParser
+import com.momecarefoundation.app.api.APICall
 import com.momecarefoundation.app.api.SafeRetrieveJsonData
+import com.momecarefoundation.app.callback.PresenterCallback
+import com.momecarefoundation.app.callback.RespondentCallback
+import com.momecarefoundation.app.callback.ResponseCallback
 import com.momecarefoundation.app.model.QuestionItem
 import com.momecarefoundation.app.model.QuestionOption
+import com.momecarefoundation.app.model.Respondent
+import com.momecarefoundation.app.model.Response
+import com.momecarefoundation.app.util.AppPresenter
 import com.momecarefoundation.app.util.QuestionType
+import com.momecarefoundation.app.util.Utility
 import khronos.toString
 import kotlinx.android.synthetic.main.activity_take_survey.*
 import kotlinx.android.synthetic.main.toolbar_main.*
@@ -34,12 +46,15 @@ class TakeSurvey : AppCompatActivity() {
 
     companion object {
         const val survey = "SURVEY"
+        const val tag = "TAG_SURVEY"
     }
 
     private var safeRetrieveJsonData = SafeRetrieveJsonData()
     private val questions = ArrayList<QuestionItem>()
     private var surveyTitle = ""
+    private var surveyId = ""
     private var date = Calendar.getInstance()
+    private var respondent: Respondent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,18 +64,91 @@ class TakeSurvey : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         textViewTitle.text = "TAKE SURVEY"
 
-        getData()
-
         textViewRespondent.setOnClickListener {
+            val startRespondentIntent = Intent(this, AddRespondent::class.java)
+            startRespondentIntent.putExtra(AddRespondent.respondentCallback, true)
+            pickRespondent.launch(startRespondentIntent)
+        }
+
+        buttonSubmit.setOnClickListener {
+            if (respondent == null) {
+                AppPresenter(this).showMessage(message = "Add respondent and proceed")
+                return@setOnClickListener
+            }
+
+            val hasUnAnsweredQuestion = arrayListOf<Boolean>()
+            val answers = ArrayList<QuestionOption>()
+            questions.forEach { question ->
+                val selectedOption = question.answersOptions.filter { it.isSelected }
+                answers.addAll(selectedOption)
+                hasUnAnsweredQuestion.add(selectedOption.isNotEmpty())
+            }
+
+            if (hasUnAnsweredQuestion.first { false }) {
+                AppPresenter(this).showMessage(message = "Answer all questions and proceed")
+                return@setOnClickListener
+            }
+
+
+            val lat = MoMeCare.locationReceived?.latitude ?: 0.00
+            val lon = MoMeCare.locationReceived?.longitude ?: 0.00
+            val response = Response(
+                Calendar.getInstance().timeInMillis.toString(),
+                surveyId,
+                answers.toString(),
+                respondent.toString(),
+                lat,
+                lon,
+                Utility().getLocationName(this,lat,lon),
+                false
+            )
+
+            APICall(this).createResponse(response, object : ResponseCallback {
+                override fun onRequestEnded() {
+                    super.onRequestEnded()
+                    AppPresenter(this@TakeSurvey).showMessage(
+                        message = "Response successfully submitted. You either head back or add more.",
+                        positiveAction = "ADD MORE",
+                        negativeActive = "BACK",
+                        presenterCallback = object : PresenterCallback {
+                            override fun onActionSelected(item: Any) {
+                                super.onActionSelected(item)
+                                val action = item as String
+                                if (action == "ADD MORE") {
+                                    resetFields()
+                                } else {
+                                    finish()
+                                }
+                            }
+                        })
+                }
+            })
 
         }
+
+        getData()
     }
+
+    private fun resetFields() {
+        respondent = null
+        textViewRespondent.text = "Add Respondent"
+    }
+
+    //MARK: handle start location things
+    private val pickRespondent =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val respondent =
+                    JsonParser().parse(result.data?.getStringExtra(AddRespondent.respondent)).asJsonObject
+
+            }
+        }
 
     private fun getData() {
         val parsedData = intent.getStringExtra(survey)
-
         val questionDataRaw = JsonParser().parse(parsedData).asJsonObject
         surveyTitle = safeRetrieveJsonData.getStringJsonData(questionDataRaw, "name")
+        surveyId = safeRetrieveJsonData.getStringJsonData(questionDataRaw, "id")
         val jsonDataString = safeRetrieveJsonData.getStringJsonData(questionDataRaw, "questions")
         val jsonData = JsonParser().parse(jsonDataString).asJsonArray
 
@@ -106,11 +194,17 @@ class TakeSurvey : AppCompatActivity() {
                             R.layout.layout_question_input,
                             null
                         ) as TextInputLayout
+                    textInputLayout.id = Calendar.getInstance().timeInMillis.toInt()
                     val editText = textInputLayout.editText
+                    editText?.id = Calendar.getInstance().timeInMillis.toInt()
                     editText?.doAfterTextChanged { editInput ->
-                        it.answersOptions[0].label = editInput.toString().trim()
-                        it.answersOptions[0].isSelected = true
+                        val answerText = editInput.toString().trim()
+                        it.answersOptions[0].label = answerText
+                        it.answersOptions[0].isSelected = answerText.isNotEmpty()
                     }
+
+                    //MARK: add to parent
+                    linearLayoutContent.addView(textInputLayout)
                 }
                 QuestionType.DATE.name -> {
                     val textInputLayout =
@@ -118,12 +212,19 @@ class TakeSurvey : AppCompatActivity() {
                             R.layout.layout_question_input,
                             null
                         ) as TextInputLayout
-                    textInputLayout.setEndIconDrawable(R.drawable.common_google_signin_btn_icon_dark)
-                    textInputLayout.setEndIconOnClickListener { _ ->
-                        showDateTimePicker(it)
-                    }
                     val editText = textInputLayout.editText
+                    textInputLayout.setEndIconDrawable(R.drawable.ic_add_circle_dark)
+                    textInputLayout.setEndIconOnClickListener { _ ->
+                        showDateTimePicker(it, editText!!)
+                    }
+                    //editText?.hint = "Select Date"
                     editText?.isFocusable = false
+                    editText?.setOnClickListener { _ ->
+                        showDateTimePicker(it, editText)
+                    }
+
+                    //MARK: add to parent
+                    linearLayoutContent.addView(textInputLayout)
                 }
                 QuestionType.SINGLE_SELECT_MULTIPLE_CHOICE.name -> {
                     //MARK: create option holder
@@ -164,6 +265,8 @@ class TakeSurvey : AppCompatActivity() {
                         //MARK: currently selected answer
                         val position = it.answersOptions.indexOf(optionClicked)
                         it.answersOptions[position].isSelected = true
+
+                        Log.e("SINGLE", it.answersOptions.toString())
                     }
                     //MARK: add to parent
                     linearLayoutContent.addView(singleSelectButton)
@@ -198,6 +301,8 @@ class TakeSurvey : AppCompatActivity() {
                         //MARK: update selection
                         val position = it.answersOptions.indexOf(optionClicked)
                         it.answersOptions[position].isSelected = isChecked
+
+                        Log.e("MULTI", it.answersOptions.toString())
                     }
                     //MARK: add to parent
                     linearLayoutContent.addView(singleSelectButton)
@@ -207,34 +312,21 @@ class TakeSurvey : AppCompatActivity() {
 
     }
 
-    //MARK: update the selected answer
-    private fun updateSelectedAnswer() {
-
-    }
-
-    //MARK: update the selected answer
-    private fun removeSelectedAnswer() {
-
-    }
-
     //MARK: present the data picker
-    private fun showDateTimePicker(questionItem: QuestionItem) {
+    private fun showDateTimePicker(questionItem: QuestionItem, editText: EditText) {
         val currentDate = Calendar.getInstance()
         DatePickerDialog(
             this,
-            { view, year, monthOfYear, dayOfMonth ->
+            { _, year, monthOfYear, dayOfMonth ->
                 date.set(year, monthOfYear, dayOfMonth)
-                TimePickerDialog(
-                    this,
-                    { view, hourOfDay, minute ->
-                        date.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                        date.set(Calendar.MINUTE, minute)
-                        val position = questions.indexOf(questionItem)
-                        questions[position].answersOptions[0].label =
-                            Date(date.timeInMillis).toString("YYYY-MM-DD")
-                        questions[position].answersOptions[0].isSelected = true
-                    }, currentDate[Calendar.HOUR_OF_DAY], currentDate[Calendar.MINUTE], false
-                ).show()
+
+                val position = questions.indexOf(questionItem)
+                questions[position].answersOptions[0].label =
+                    Date(date.timeInMillis).toString("YYYY-MM-DD")
+                questions[position].answersOptions[0].isSelected = true
+
+                editText.setText(Date(date.timeInMillis).toString("YYYY-MM-DD"))
+
             }, currentDate[Calendar.YEAR], currentDate[Calendar.MONTH], currentDate[Calendar.DATE]
         ).show()
     }

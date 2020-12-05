@@ -36,50 +36,69 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar">
 
-
         <LinearLayout
-            android:id="@+id/linearLayoutContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bordered_small_shape"
-                android:padding="@dimen/activity_horizontal_margin">
+            <LinearLayout
+                android:id="@+id/linearLayoutContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bordered_small_shape"
+                    android:padding="@dimen/activity_horizontal_margin">
+
+                    <TextView
+                        android:id="@+id/textViewRespondent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_add_circle"
+                        android:drawableRight="@drawable/ic_add_circle"
+                        android:ellipsize="end"
+                        android:gravity="start"
+                        android:text="Add Respondent"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/textViewRespondent"
+                    android:id="@+id/textViewSurvey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/ic_add_circle"
-                    android:drawableRight="@drawable/ic_add_circle"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
                     android:ellipsize="end"
-                    android:gravity="start"
-                    android:text="Add Respondent"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:text="@string/app_name"
+                    android:textAllCaps="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewSurvey"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSubmit"
+                style="@style/MaterialTextButtonRoundedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/button_height"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:maxLines="1"
-                android:text="@string/app_name"
+                android:text="Submit Response"
                 android:textAllCaps="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textStyle="bold" />
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatCheckBoxReminderMe" />
 
         </LinearLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

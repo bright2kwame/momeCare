@@ -3,6 +3,7 @@ package com.momecarefoundation.app.model
 import com.vicpin.krealmextensions.*
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import khronos.toString
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -26,7 +27,7 @@ open class Respondent(
     var numberOfExclusiveBreastFeedingMonths: String = "",
     var reasonIfLessThanSixMonths: String = "",
     var ageOfEldestChild: String = "",
-    var receivePhoneCallReminders: String = "",
+    var receivePhoneCallReminders: Boolean = true,
     var isBackedUp: Boolean = false,
 ) : RealmObject() {
 
@@ -93,6 +94,41 @@ open class Respondent(
             e.printStackTrace()
             ""
         }
+    }
+
+    fun parseToJson(): JSONObject {
+        val postData = JSONObject()
+        postData.put("first_name", firstName)
+        postData.put("last_name",lastName)
+        postData.put("date_of_birth", dateOfBirth?.toString("YYYY-MM-DD"))
+        postData.put("recent_delivery_date", recentDeliveryDate?.toString("YYYY-MM-DD"))
+        postData.put("phone_number", phone)
+        postData.put("language_spoken", languageSpoken)
+        postData.put("community", community)
+        postData.put(
+            "has_delivered_recent_child_at_registered_hospital",
+            hasDeliveredRecentChildAtRegisteredHospital
+        )
+        postData.put(
+            "reason_if_not_delivered_at_hospital",
+            reasonIfNotDeliveredAtHospital
+        )
+        postData.put(
+            "has_attended_all_scheduled_child_weighings",
+            hasAttendedAllScheduledChildWeighings
+        )
+        postData.put(
+            "reason_if_not_attended_all_weighings",
+            reasonIfNotAttendedAllWeighings
+        )
+        postData.put(
+            "number_of_exclusive_breastfeeding_months",
+            numberOfExclusiveBreastFeedingMonths
+        )
+        postData.put("reason_if_less_than_six_months", reasonIfLessThanSixMonths)
+        postData.put("age_of_eldest_child", ageOfEldestChild)
+        postData.put("receive_phone_call_reminders", receivePhoneCallReminders)
+        return postData
     }
 
     override fun toString(): String {
