@@ -85,6 +85,17 @@ open class Response(
         }
     }
 
+    fun parseToJson(): JSONObject {
+        val postData = JSONObject()
+        postData.put("survey_id", survey)
+        postData.put("response", answer)
+        postData.put("respondent", respondent)
+        postData.put("location_name", locationName)
+        postData.put("latitude", locationLat)
+        postData.put("longitude", locationLon)
+        return postData
+    }
+
     override fun toString(): String {
         return toJSON()
     }

@@ -87,7 +87,8 @@ class APICall(private var context: Context) {
             object : JsonObjectRequest(Request.Method.POST, urlResponse, responseData,
                 { response ->
                     Log.e(tag, response.toString())
-                    val responseCode = safeRetrieveJsonData.getStringJSONData(response,"response_code")
+                    val responseCode =
+                        safeRetrieveJsonData.getStringJSONData(response, "response_code")
                     if (responseCode == "100") {
                         Response().clearAll()
                     }
@@ -295,14 +296,7 @@ class APICall(private var context: Context) {
     }
 
     private fun formatResponse(response: Response): JSONObject {
-        val postData = JSONObject()
-        postData.put("survey_id", response.survey)
-        postData.put("response", response.answer)
-        postData.put("respondent", response.respondent)
-        postData.put("location_name", response.locationName)
-        postData.put("latitude", response.locationLat)
-        postData.put("longitude", response.locationLon)
-        return postData
+        return response.parseToJson()
     }
 
     private fun formatRespondent(respondent: Respondent): JSONObject {
