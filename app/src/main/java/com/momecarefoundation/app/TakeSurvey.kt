@@ -3,20 +3,16 @@ package com.momecarefoundation.app
 
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -25,7 +21,6 @@ import com.google.gson.JsonParser
 import com.momecarefoundation.app.api.APICall
 import com.momecarefoundation.app.api.SafeRetrieveJsonData
 import com.momecarefoundation.app.callback.PresenterCallback
-import com.momecarefoundation.app.callback.RespondentCallback
 import com.momecarefoundation.app.callback.ResponseCallback
 import com.momecarefoundation.app.model.QuestionItem
 import com.momecarefoundation.app.model.QuestionOption
@@ -38,6 +33,7 @@ import khronos.toString
 import kotlinx.android.synthetic.main.activity_take_survey.*
 import kotlinx.android.synthetic.main.toolbar_main.*
 import kotlinx.android.synthetic.main.toolbar_main.toolbarHome
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -71,6 +67,7 @@ class TakeSurvey : AppCompatActivity() {
         }
 
         buttonSubmit.setOnClickListener {
+
             if (respondent == null) {
                 AppPresenter(this).showMessage(message = "Add respondent and proceed")
                 return@setOnClickListener
@@ -79,12 +76,15 @@ class TakeSurvey : AppCompatActivity() {
             val hasUnAnsweredQuestion = arrayListOf<Boolean>()
             val answers = ArrayList<QuestionOption>()
             questions.forEach { question ->
-                val selectedOption = question.answersOptions.filter { it.isSelected }
-                answers.addAll(selectedOption)
-                hasUnAnsweredQuestion.add(selectedOption.isNotEmpty())
+                if (question.answersOptions.find { it.isSelected } != null){
+                    val selectedOption = question.answersOptions.filter { it.isSelected }
+                    answers.addAll(selectedOption)
+                } else {
+                    hasUnAnsweredQuestion.add(false)
+                }
             }
 
-            if (hasUnAnsweredQuestion.first { false }) {
+            if (hasUnAnsweredQuestion.isNotEmpty()) {
                 AppPresenter(this).showMessage(message = "Answer all questions and proceed")
                 return@setOnClickListener
             }
@@ -99,7 +99,7 @@ class TakeSurvey : AppCompatActivity() {
                 respondent.toString(),
                 lat,
                 lon,
-                Utility().getLocationName(this,lat,lon),
+                Utility().getLocationName(this, lat, lon),
                 false
             )
 
@@ -138,9 +138,12 @@ class TakeSurvey : AppCompatActivity() {
     private val pickRespondent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val respondent =
-                    JsonParser().parse(result.data?.getStringExtra(AddRespondent.respondent)).asJsonObject
-
+                val respondentIn = result.data?.getStringExtra(AddRespondent.respondent)
+                respondentIn?.let {
+                    val objectData = JSONObject(it)
+                    respondent = APICall(this).parseRespondent(objectData)
+                    textViewRespondent.text = "${respondent?.lastName} ${respondent?.firstName}"
+                }
             }
         }
 
@@ -183,7 +186,7 @@ class TakeSurvey : AppCompatActivity() {
             //MARK: set question title here
             val textViewQuestion =
                 layoutInflater.inflate(R.layout.layout_question_textview, null) as TextView
-            textViewQuestion.id = it.id.toInt()
+            textViewQuestion.id = Calendar.getInstance().timeInMillis.toInt()
             textViewQuestion.text = it.title
             linearLayoutContent.addView(textViewQuestion)
 
@@ -202,7 +205,6 @@ class TakeSurvey : AppCompatActivity() {
                         it.answersOptions[0].label = answerText
                         it.answersOptions[0].isSelected = answerText.isNotEmpty()
                     }
-
                     //MARK: add to parent
                     linearLayoutContent.addView(textInputLayout)
                 }
@@ -212,7 +214,10 @@ class TakeSurvey : AppCompatActivity() {
                             R.layout.layout_question_input,
                             null
                         ) as TextInputLayout
+                    textInputLayout.id = Calendar.getInstance().timeInMillis.toInt()
                     val editText = textInputLayout.editText
+                    editText?.id = Calendar.getInstance().timeInMillis.toInt()
+                    textInputLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
                     textInputLayout.setEndIconDrawable(R.drawable.ic_add_circle_dark)
                     textInputLayout.setEndIconOnClickListener { _ ->
                         showDateTimePicker(it, editText!!)
@@ -234,6 +239,7 @@ class TakeSurvey : AppCompatActivity() {
                     ) as MaterialButtonToggleGroup
                     singleSelectButton.orientation = LinearLayout.VERTICAL
                     singleSelectButton.isSingleSelection = true
+                    singleSelectButton.id = Calendar.getInstance().timeInMillis.toInt()
                     //MARK: create options
                     it.answersOptions.forEach { option ->
                         val button = layoutInflater.inflate(
@@ -279,6 +285,7 @@ class TakeSurvey : AppCompatActivity() {
                     ) as MaterialButtonToggleGroup
                     singleSelectButton.orientation = LinearLayout.VERTICAL
                     singleSelectButton.isSingleSelection = false
+                    singleSelectButton.id = Calendar.getInstance().timeInMillis.toInt()
                     //MARK: create options
                     it.answersOptions.forEach { option ->
                         val button = layoutInflater.inflate(

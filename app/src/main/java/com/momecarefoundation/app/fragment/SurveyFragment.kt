@@ -86,7 +86,7 @@ class SurveyFragment : Fragment() {
     //MARK: fetch the data from the server
     private fun fetchData(url: String) {
         progressBar?.visibility = View.VISIBLE
-        APICall(requireContext()).surveys(url, null, itemInterface)
+        activity?.let { APICall(it).surveys(url, null, itemInterface) }
     }
 
     //MARK: show the progress
@@ -139,9 +139,11 @@ class SurveyFragment : Fragment() {
 
     // MARK: clean all records and show status when product sync failed
     private fun cleanRecordsAndIndicateFailure() {
-        progressBar.visibility = View.INVISIBLE
+        progressBar?.visibility = View.INVISIBLE
         this.data.clear()
-        Toast.makeText(requireContext(), "Failed to refresh list", Toast.LENGTH_LONG).show()
+        activity?.let {
+            Toast.makeText(it, "Failed to refresh list", Toast.LENGTH_LONG).show()
+        }
     }
 
     // MARK: delete all old products and restore with new products
@@ -151,12 +153,14 @@ class SurveyFragment : Fragment() {
             Survey().saveAll(data)
             uiThread {
                 loadsAllItems(false)
-                Toast.makeText(
-                    requireContext(),
-                    "Synced all items",
-                    Toast.LENGTH_LONG
-                ).show()
-                progressBar.visibility = View.INVISIBLE
+                activity?.let {
+                    Toast.makeText(
+                        it,
+                        "Synced all items",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                progressBar?.visibility = View.INVISIBLE
             }
         }
     }

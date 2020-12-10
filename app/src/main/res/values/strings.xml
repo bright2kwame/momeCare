@@ -16,7 +16,7 @@
     <!--the menu section-->
     <string name="menu_categories">Category</string>
     <string name="menu_surveys">Survey</string>
-    <string name="menu_responds">Respond</string>
+    <string name="menu_responds">Response</string>
     <string name="menu_respondents">Respondent</string>
     <string name="menu_accounts">Account</string>
     <!--end of menu-->

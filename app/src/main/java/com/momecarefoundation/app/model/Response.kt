@@ -42,7 +42,7 @@ open class Response(
 
     //delete first item
     fun deleteItem(id: String) {
-        Response().deleteItem(id = id)
+        Response().delete { equalTo("id", id) }
     }
 
     // query all offline items
@@ -64,25 +64,8 @@ open class Response(
     }
 
     // get all
-    fun all() {
-        Response().queryAll()
-    }
-
-    private fun toJSON(): String {
-        val jsonObject = JSONObject()
-        return try {
-            jsonObject.put("id", id)
-            jsonObject.put("survey", survey)
-            jsonObject.put("answer", answer)
-            jsonObject.put("backed_up", isBackedUp)
-            jsonObject.put("latitude", locationLat)
-            jsonObject.put("longitude", locationLon)
-            jsonObject.put("location_name", locationName)
-            jsonObject.toString()
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            ""
-        }
+    fun all(): List<Response> {
+        return Response().queryAll()
     }
 
     fun parseToJson(): JSONObject {
@@ -97,6 +80,6 @@ open class Response(
     }
 
     override fun toString(): String {
-        return toJSON()
+        return parseToJson().toString()
     }
 }

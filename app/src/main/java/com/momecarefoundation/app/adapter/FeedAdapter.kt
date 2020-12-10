@@ -5,7 +5,9 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonObject
 import com.momecarefoundation.app.R
+import com.momecarefoundation.app.api.APICall
 import com.momecarefoundation.app.callback.AdapterCallback
 import com.momecarefoundation.app.model.Category
 import com.momecarefoundation.app.model.Respondent
@@ -13,6 +15,7 @@ import com.momecarefoundation.app.model.Response
 import com.momecarefoundation.app.model.Survey
 import com.momecarefoundation.app.util.Utility
 import com.squareup.picasso.Picasso
+import org.json.JSONObject
 
 /**
  * Created by Monarchy on 09/10/2017.
@@ -91,7 +94,6 @@ class FeedAdapter(private var items: List<Any>, private var adapterCallback: Ada
         val textViewName = viewHolder.textViewName
         val textViewInfo = viewHolder.textViewInfo
         val imageViewCategory = viewHolder.imageViewCategory
-        val imageViewCategoryIcon = viewHolder.imageViewCategoryIcon
 
         textViewName?.text = data.name
         textViewInfo?.text = data.info
@@ -102,7 +104,7 @@ class FeedAdapter(private var items: List<Any>, private var adapterCallback: Ada
             imageViewCategory?.setImageDrawable(textDrawable)
         }
         parent.setOnClickListener {
-            adapterCallback.onActionPerformed("", viewHolder.adapterPosition)
+            adapterCallback.onActionPerformed(data, viewHolder.adapterPosition)
         }
 
     }
@@ -110,13 +112,39 @@ class FeedAdapter(private var items: List<Any>, private var adapterCallback: Ada
     // MARK: configure the respondent
     private fun configureRespondentViewHolder(viewHolder: ViewHolderRespondent, data: Respondent) {
         val parent = viewHolder.itemView
+        val textViewDate = viewHolder.textViewDate
+        val textViewInfo = viewHolder.textViewInfo
+        val textViewName = viewHolder.textViewName
+        val imageViewIcon = viewHolder.imageViewIcon
+
+        textViewName?.text = "${data.lastName} ${data.firstName}"
+        textViewInfo?.text = data.phone
+        textViewDate?.text = data.community
+
+        val textDrawable = Utility().getLetterView(parent.context, data.firstName, 50, null, true)
+        imageViewIcon?.setImageDrawable(textDrawable)
+
+        parent.setOnClickListener {
+            adapterCallback.onActionPerformed(data, viewHolder.adapterPosition)
+        }
 
     }
 
     // MARK: configure the response
     private fun configureResponseViewHolder(viewHolder: ViewHolderResponse, data: Response) {
         val parent = viewHolder.itemView
+        val textViewResponseNumber = viewHolder.textViewResponseNumber
+        val textViewInfo = viewHolder.textViewInfo
+        val textViewDate = viewHolder.textViewDate
 
+        textViewResponseNumber?.text = data.id
+        val respondent = APICall(viewHolder.itemView.context).parseRespondent(JSONObject(data.respondent))
+        textViewInfo?.text = "${respondent.lastName} ${respondent.firstName}"
+        textViewDate?.text = "${respondent.phone}"
+
+        parent.setOnClickListener {
+            adapterCallback.onActionPerformed(data, viewHolder.adapterPosition)
+        }
     }
 
     // MARK: configure the survey

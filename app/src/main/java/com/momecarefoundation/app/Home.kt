@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.momecarefoundation.app.api.APICall
 import com.momecarefoundation.app.fragment.*
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -45,12 +46,6 @@ class Home : AppCompatActivity() {
 
         //MARK: set the selected
         bottomNavigation.selectedItemId = R.id.pageSurveys
-//        if (savedInstanceState == null) {
-//            supportFragmentManager
-//                .beginTransaction()
-//                .replace(R.id.fragmentContainer, SurveyFragment()
-//            ).commit()
-//        }
 
 
         when (PackageManager.PERMISSION_GRANTED) {
@@ -64,6 +59,9 @@ class Home : AppCompatActivity() {
                 requestLocationPermission()
             }
         }
+
+        //MARK: upload offline
+        APICall(this).backUpOfflineOrder()
 
     }
 
@@ -90,8 +88,9 @@ class Home : AppCompatActivity() {
             }
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, selectedFragment!!
-            ).commit()
+                .replace(
+                    R.id.fragmentContainer, selectedFragment!!
+                ).commit()
             true
         }
 }

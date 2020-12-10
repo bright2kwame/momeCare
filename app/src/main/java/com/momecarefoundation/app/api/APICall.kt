@@ -11,6 +11,10 @@ import com.momecarefoundation.app.model.*
 import khronos.toString
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class APICall(private var context: Context) {
@@ -44,19 +48,20 @@ class APICall(private var context: Context) {
         val respondentDataContent = ArrayList<String>()
         allRespondents.forEach {
             val formattedEach = formatRespondent(it)
-            respondentDataContent.add(formattedEach.toString())
+            respondentDataContent.add(formattedEach.toString().replace("\\", ""))
         }
         respondentData.put(
             "data",
-            respondentDataContent.toString()
+            respondentDataContent
         )
-        val url = baseUrl.plus("respondents/bulk_upload_respondent/")
 
+        Log.e(tag, respondentData.toString())
+        val url = baseUrl.plus("respondents/bulk_upload_respondents/")
         val respondentJsonObjectRequest =
             object : JsonObjectRequest(Request.Method.POST, url, respondentData,
                 { response ->
                     Log.e(tag, response.toString())
-                    val responseCode = response.getString("response_code")
+                    val responseCode = safeRetrieveJsonData.getStringJSONData(response,"response_code")
                     if (responseCode == "100") {
                         Respondent().clearAll()
                     }
@@ -75,14 +80,14 @@ class APICall(private var context: Context) {
         val responseDataContent = ArrayList<String>()
         allResponse.forEach {
             val formattedEach = formatResponse(it)
-            responseDataContent.add(formattedEach.toString())
+            responseDataContent.add(formattedEach.toString().replace("\\", ""))
         }
         responseData.put(
             "data",
-            responseDataContent.toString()
+            responseDataContent
         )
-        val urlResponse = baseUrl.plus("response/bulk_upload_response/")
-
+        Log.e(tag, responseData.toString())
+        val urlResponse = baseUrl.plus("surveys/bulk_upload_survey_responses/")
         val responseJsonObjectRequest =
             object : JsonObjectRequest(Request.Method.POST, urlResponse, responseData,
                 { response ->
@@ -121,7 +126,7 @@ class APICall(private var context: Context) {
             { response ->
                 Log.e(tag, response.toString())
                 callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     val user = parseUser(response.getJSONObject("results"))
                     User().save(user)
@@ -153,7 +158,7 @@ class APICall(private var context: Context) {
             { response ->
                 callback.onRequestEnded()
                 Log.e(tag, response.toString())
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     val message = response.getString("detail")
                     callback.onReceivedDetail(message)
@@ -186,7 +191,7 @@ class APICall(private var context: Context) {
             { response ->
                 Log.e(tag, response.toString())
                 callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     val message = response.getString("detail")
                     callback.onReceivedDetail(message)
@@ -215,7 +220,7 @@ class APICall(private var context: Context) {
             { response ->
                 Log.e(tag, response.toString())
                 callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     val data = ArrayList<Category>()
                     val results = response.getJSONArray("results")
@@ -262,7 +267,7 @@ class APICall(private var context: Context) {
             { response ->
                 Log.e(tag, response.toString())
                 callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     val data = ArrayList<Survey>()
                     val results = response.getJSONArray("results")
@@ -310,18 +315,19 @@ class APICall(private var context: Context) {
             postData = formatResponse(it)
             Response().save(it)
         }
-        val url = baseUrl.plus("respondents/submit_survey_response/")
+        Log.e(tag, responseData.toString())
+        val url = baseUrl.plus("surveys/submit_survey_response/")
         val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, postData,
             { response ->
-                Log.e(tag, response.toString())
-                callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     //MARK: delete local date
                     responseData?.let {
                         Response().deleteItem(it.id)
                     }
                 }
+                Log.e(tag, response.toString())
+                callback.onRequestEnded()
             },
             { error ->
                 callback.onRequestEnded()
@@ -346,15 +352,15 @@ class APICall(private var context: Context) {
         val url = baseUrl.plus("respondents/create_or_edit_respondent/")
         val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, postData,
             { response ->
-                Log.e(tag, response.toString())
-                callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     //MARK: delete local data
                     respondent?.let {
                         Respondent().deleteItem(it.id)
                     }
                 }
+                Log.e(tag, response.toString())
+                callback.onRequestEnded()
             },
             { error ->
                 callback.onRequestEnded()
@@ -378,7 +384,7 @@ class APICall(private var context: Context) {
             { response ->
                 Log.e(tag, response.toString())
                 callback.onRequestEnded()
-                val responseCode = response.getString("response_code")
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
                     val data = ArrayList<Category>()
                     val results = response.getJSONArray("results")
@@ -494,17 +500,39 @@ class APICall(private var context: Context) {
     }
 
     //MARK: parse respondent
-    private fun parseRespondent(jsonObject: JSONObject): Respondent {
-        val id = jsonObject.getInt("id").toString()
-        val name = jsonObject.getString("name")
-        val description = safeRetrieveJsonData.getStringJSONData(jsonObject, "description")
-        val numOfQuestions =
-            safeRetrieveJsonData.getDataIntJSONData(jsonObject, "number_of_questions")
-        val numOfResponses = jsonObject.getInt("number_of_responses")
-        val date = jsonObject.getString("date_created")
-        val image = safeRetrieveJsonData.getStringJSONData(jsonObject, "image")
+     fun parseRespondent(jsonObject: JSONObject): Respondent {
+        val id = safeRetrieveJsonData.getStringJSONData(jsonObject, "id")
+        val phone = safeRetrieveJsonData.getStringJSONData(jsonObject, "phone_number")
+        val firstName = safeRetrieveJsonData.getStringJSONData(jsonObject, "first_name")
+        val lastName = safeRetrieveJsonData.getStringJSONData(jsonObject, "last_name")
+        val dateOfBirth = safeRetrieveJsonData.getStringJSONData(jsonObject, "date_of_birth")
+        val deliveryDate = safeRetrieveJsonData.getStringJSONData(jsonObject, "recent_delivery_date")
+        val languageSpoken = safeRetrieveJsonData.getStringJSONData(jsonObject, "language_spoken")
+        val reasonIfNotDeliveredAtHospital = safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_not_delivered_at_hospital")
+        val hasDeliveredRecentChildAtRegisteredHospital = safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "has_delivered_recent_child_at_registered_hospital")
+        val hasAttendedAllScheduledChildWeighings = safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "has_attended_all_scheduled_child_weighings")
+        val receivePhoneCallReminders = safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "receive_phone_call_reminders")
+        val reasonIfNotAttendedAllWeighings = safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_not_attended_all_weighings")
+        val numberOfExclusiveBreastFeedingMonths = safeRetrieveJsonData.getStringJSONData(jsonObject, "number_of_exclusive_breastfeeding_months")
+        val reasonIfLessThanSixMonths = safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_less_than_six_months")
+        val ageOfEldestChild = safeRetrieveJsonData.getStringJSONData(jsonObject, "age_of_eldest_child")
+        val numberOfChildren = safeRetrieveJsonData.getStringJSONData(jsonObject, "number_of_children")
+        val community = safeRetrieveJsonData.getStringJSONData(jsonObject, "community")
 
-        return Respondent(id, name, description)
+        var birthDateParse: Date? = null
+        if (dateOfBirth.isNotEmpty()) {
+            birthDateParse = SimpleDateFormat("yyyy-mm-dd").parse(dateOfBirth)
+        }
+
+        var recentBirthDateParse: Date? = null
+        if (deliveryDate.isNotEmpty()) {
+            recentBirthDateParse = SimpleDateFormat("yyyy-mm-dd").parse(deliveryDate)
+        }
+
+        return Respondent(id,firstName,lastName,phone,birthDateParse,recentBirthDateParse,languageSpoken,community,hasDeliveredRecentChildAtRegisteredHospital,
+            reasonIfNotDeliveredAtHospital,hasAttendedAllScheduledChildWeighings,reasonIfNotAttendedAllWeighings, numberOfExclusiveBreastFeedingMonths,
+            reasonIfLessThanSixMonths,ageOfEldestChild,receivePhoneCallReminders,numberOfChildren,false)
+
     }
 
 

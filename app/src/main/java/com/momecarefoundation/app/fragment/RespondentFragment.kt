@@ -1,6 +1,7 @@
 package com.momecarefoundation.app.fragment
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.momecarefoundation.app.AddRespondent
 import com.momecarefoundation.app.R
 import com.momecarefoundation.app.adapter.FeedAdapter
 import com.momecarefoundation.app.callback.AdapterCallback
@@ -24,6 +26,7 @@ class RespondentFragment : Fragment() {
     private var itemSelected = object : AdapterCallback {
         override fun onActionPerformed(item: Any, position: Int) {
             super.onActionPerformed(item, position)
+
         }
     }
 
@@ -47,6 +50,10 @@ class RespondentFragment : Fragment() {
         recyclerView.adapter = baseAdapter
 
         loadsAllItems()
+
+        floatingActionBarAdd.setOnClickListener {
+            startActivity(Intent(activity, AddRespondent::class.java))
+        }
     }
 
     override fun onResume() {

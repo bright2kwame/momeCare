@@ -57,7 +57,6 @@ class CategoryFragment : Fragment() {
         recyclerView.adapter = baseAdapter
 
         loadsAllItems(true)
-
     }
 
     // MARK: fetch all items
@@ -82,7 +81,7 @@ class CategoryFragment : Fragment() {
     //MARK: fetch the data from the server
     private fun fetchData(url: String) {
         progressBar?.visibility = View.VISIBLE
-        APICall(requireContext()).surveyGroups(url,itemInterface)
+        activity?.let { APICall(it).surveyGroups(url,itemInterface)  }
     }
 
     private val itemInterface = object : SurveyGroupCallback {
@@ -117,7 +116,7 @@ class CategoryFragment : Fragment() {
     private fun cleanRecordsAndIndicateFailure() {
         progressBar?.visibility = View.INVISIBLE
         this.data.clear()
-        Toast.makeText(requireContext(), "Failed to refresh list", Toast.LENGTH_LONG).show()
+        Toast.makeText(context?.applicationContext, "Failed to refresh list", Toast.LENGTH_LONG).show()
     }
 
     // MARK: delete all old products and restore with new products

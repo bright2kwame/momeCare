@@ -20,14 +20,15 @@ open class Respondent(
     var recentDeliveryDate: Date? = null,
     var languageSpoken: String = "",
     var community: String = "",
-    var hasDeliveredRecentChildAtRegisteredHospital: String = "",
+    var hasDeliveredRecentChildAtRegisteredHospital: Boolean = false,
     var reasonIfNotDeliveredAtHospital: String = "",
-    var hasAttendedAllScheduledChildWeighings: String = "",
+    var hasAttendedAllScheduledChildWeighings: Boolean = false,
     var reasonIfNotAttendedAllWeighings: String = "",
-    var numberOfExclusiveBreastFeedingMonths: String = "",
+    var numberOfExclusiveBreastFeedingMonths: String = "0",
     var reasonIfLessThanSixMonths: String = "",
     var ageOfEldestChild: String = "",
     var receivePhoneCallReminders: Boolean = true,
+    var numberOfChildren: String = "0",
     var isBackedUp: Boolean = false,
 ) : RealmObject() {
 
@@ -53,7 +54,7 @@ open class Respondent(
 
     //delete first item
     fun deleteItem(id: String) {
-        Respondent().deleteItem(id = id)
+        Respondent().delete { equalTo("id", id) }
     }
 
     // save all items
@@ -79,27 +80,10 @@ open class Respondent(
         return Respondent().queryAll()
     }
 
-
-    private fun toJSON(): String {
-        val jsonObject = JSONObject()
-        return try {
-            jsonObject.put("id", id)
-            jsonObject.put("first_name", firstName)
-            jsonObject.put("last_name", lastName)
-            jsonObject.put("phone", phone)
-            jsonObject.put("backed_up", isBackedUp)
-            jsonObject.put("date_of_birth", dateOfBirth)
-            jsonObject.toString()
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            ""
-        }
-    }
-
     fun parseToJson(): JSONObject {
         val postData = JSONObject()
         postData.put("first_name", firstName)
-        postData.put("last_name",lastName)
+        postData.put("last_name", lastName)
         postData.put("date_of_birth", dateOfBirth?.toString("YYYY-MM-DD"))
         postData.put("recent_delivery_date", recentDeliveryDate?.toString("YYYY-MM-DD"))
         postData.put("phone_number", phone)
@@ -128,10 +112,11 @@ open class Respondent(
         postData.put("reason_if_less_than_six_months", reasonIfLessThanSixMonths)
         postData.put("age_of_eldest_child", ageOfEldestChild)
         postData.put("receive_phone_call_reminders", receivePhoneCallReminders)
+        postData.put("number_of_children", numberOfChildren)
         return postData
     }
 
     override fun toString(): String {
-        return toJSON()
+        return parseToJson().toString()
     }
 }

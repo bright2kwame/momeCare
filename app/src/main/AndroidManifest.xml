@@ -18,8 +18,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:fullBackupContent="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:theme="@style/Theme.MoMECAREFoundation">
-        <activity android:name=".AddRespondent"></activity>
+
+        <activity android:name=".AddRespondent"/>
         <activity android:name=".TakeSurvey" />
         <activity android:name=".Home" />
         <activity
