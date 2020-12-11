@@ -8,7 +8,6 @@ import com.android.volley.toolbox.Volley
 import com.momecarefoundation.app.BuildConfig
 import com.momecarefoundation.app.callback.*
 import com.momecarefoundation.app.model.*
-import khronos.toString
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -17,7 +16,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class APICall(private var context: Context) {
+class APICall(context: Context) {
     private var genericError = "Failed to reach server, try again later."
     private val requestQueue = Volley.newRequestQueue(context.applicationContext)
     private var user = User().getUser()
@@ -187,6 +186,39 @@ class APICall(private var context: Context) {
         data.put("new_password", password)
 
         val url = baseUrl.plus("users/reset_password/")
+        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, data,
+            { response ->
+                Log.e(tag, response.toString())
+                callback.onRequestEnded()
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
+                if (responseCode == "100") {
+                    val message = response.getString("detail")
+                    callback.onReceivedDetail(message)
+                } else {
+                    val detail = response.getString("detail")
+                    callback.onReceivedError(detail)
+                }
+            },
+            { error ->
+                callback.onRequestEnded()
+                Log.e(tag, error.toString())
+                callback.onReceivedError(genericError)
+            }
+        ) {
+            override fun getHeaders(): Map<String, String> {
+                return customHeader()
+            }
+        }
+        requestQueue.add(jsonObjectRequest)
+
+    }
+
+    fun passwordChange(code: String, password: String, callback: BaseInterface) {
+        val data = JSONObject()
+        data.put("old_password", code)
+        data.put("new_password", password)
+
+        val url = baseUrl.plus("users/change_password/")
         val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, data,
             { response ->
                 Log.e(tag, response.toString())
@@ -444,9 +476,21 @@ class APICall(private var context: Context) {
         val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, data,
             { response ->
                 Log.e(tag, response.toString())
+                callback.onRequestEnded()
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
+                if (responseCode == "100") {
+                    val user = parseUser(response.getJSONObject("results"))
+                    User().save(user)
+                    callback.onReceivedItem(user)
+                } else {
+                    val detail = response.getString("detail")
+                    callback.onReceivedDetail(detail)
+                }
             },
             { error ->
                 Log.e(tag, error.toString())
+                callback.onRequestEnded()
+                callback.onReceivedError(genericError)
             }
         ) {
             override fun getHeaders(): Map<String, String> {

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/item_margin">
+
+    <TextView
+        android:id="@+id/textViewInfo"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/colorLightDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutFirstName"
+        style="@style/MaterialTextTextInputRoundedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewInfo">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:hint="Enter first name"
+            android:imeOptions="actionNext"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutLastName"
+        style="@style/MaterialTextTextInputRoundedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutFirstName">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:hint="Enter last name"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLastName"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/progress_height"
+        android:indeterminate="true"
+        android:layout_marginStart="@dimen/activity_horizontal_margin_progress"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin_progress"
+        android:layout_marginTop="@dimen/top_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin_progress"
+        android:layout_marginRight="@dimen/activity_horizontal_margin_progress"
+        android:padding="0dp"
+        android:progressTint="@color/colorPrimary"
+        android:visibility="invisible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSubmit"
+        style="@style/MaterialTextButtonRoundedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:text="UPDATE PROFILE"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
