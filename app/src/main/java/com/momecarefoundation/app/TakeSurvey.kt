@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -31,6 +32,7 @@ import com.momecarefoundation.app.util.QuestionType
 import com.momecarefoundation.app.util.Utility
 import khronos.toString
 import kotlinx.android.synthetic.main.activity_take_survey.*
+import kotlinx.android.synthetic.main.activity_tutorial.*
 import kotlinx.android.synthetic.main.toolbar_main.*
 import kotlinx.android.synthetic.main.toolbar_main.toolbarHome
 import org.json.JSONObject
@@ -60,14 +62,20 @@ class TakeSurvey : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         textViewTitle.text = "TAKE SURVEY"
 
-        textViewRespondent.setOnClickListener {
+        imageViewAdd.setOnClickListener {
             val startRespondentIntent = Intent(this, AddRespondent::class.java)
             startRespondentIntent.putExtra(AddRespondent.respondentCallback, true)
             pickRespondent.launch(startRespondentIntent)
         }
 
-        buttonSubmit.setOnClickListener {
 
+        imageViewSearch.setOnClickListener {
+            val startRespondentIntent = Intent(this, MyRespondents::class.java)
+            startRespondentIntent.putExtra(AddRespondent.respondentCallback, true)
+            pickRespondent.launch(startRespondentIntent)
+        }
+
+        buttonSubmit.setOnClickListener {
             if (respondent == null) {
                 AppPresenter(this).showMessage(message = "Add respondent and proceed")
                 return@setOnClickListener
@@ -76,7 +84,7 @@ class TakeSurvey : AppCompatActivity() {
             val hasUnAnsweredQuestion = arrayListOf<Boolean>()
             val answers = ArrayList<QuestionOption>()
             questions.forEach { question ->
-                if (question.answersOptions.find { it.isSelected } != null){
+                if (question.answersOptions.find { it.isSelected } != null) {
                     val selectedOption = question.answersOptions.filter { it.isSelected }
                     answers.addAll(selectedOption)
                 } else {
@@ -89,23 +97,39 @@ class TakeSurvey : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-
             val lat = MoMeCare.locationReceived?.latitude ?: 0.00
             val lon = MoMeCare.locationReceived?.longitude ?: 0.00
+
+            var postedAnswer = answers.toString()
+            var postedRespondent = respondent.toString()
+
+            if (!Utility().hasNetworkConnection(this)) {
+                postedAnswer = answers.toString().replace("\"", "'")
+                postedRespondent = respondent.toString().replace("\"", "'")
+            }
+
             val response = Response(
                 Calendar.getInstance().timeInMillis.toString(),
                 surveyId,
-                answers.toString(),
-                respondent.toString(),
+                postedAnswer,
+                postedRespondent,
                 lat,
                 lon,
-                Utility().getLocationName(this, lat, lon),
+                Utility().getAddress(this, lat, lon),
                 false
             )
+
+            buttonSubmit.isEnabled = false
+            progressBar.visibility = View.VISIBLE
+
 
             APICall(this).createResponse(response, object : ResponseCallback {
                 override fun onRequestEnded() {
                     super.onRequestEnded()
+
+                    buttonSubmit.isEnabled = true
+                    progressBar.visibility = View.INVISIBLE
+
                     AppPresenter(this@TakeSurvey).showMessage(
                         message = "Response successfully submitted. You either head back or add more.",
                         positiveAction = "ADD MORE",
@@ -218,7 +242,7 @@ class TakeSurvey : AppCompatActivity() {
                     val editText = textInputLayout.editText
                     editText?.id = Calendar.getInstance().timeInMillis.toInt()
                     textInputLayout.endIconMode = TextInputLayout.END_ICON_CUSTOM
-                    textInputLayout.setEndIconDrawable(R.drawable.ic_add_circle_dark)
+                    textInputLayout.setEndIconDrawable(R.drawable.ic_add_circle)
                     textInputLayout.setEndIconOnClickListener { _ ->
                         showDateTimePicker(it, editText!!)
                     }

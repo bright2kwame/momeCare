@@ -23,6 +23,6 @@ class Tutorial : AppCompatActivity() {
             finish()
         }
 
-        tutorialPager.autoScroll(3000)
+        tutorialPager.autoScroll(5000)
     }
 }

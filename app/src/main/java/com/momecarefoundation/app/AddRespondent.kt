@@ -74,6 +74,24 @@ class AddRespondent : AppCompatActivity() {
             showDateTimePicker(editTextDateOfBirth)
         }
 
+        appCompatCheckBoxRecentDeliveryInHospital.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                textInputLayoutReasonForNoHospital.visibility = View.GONE
+                editTextReasonForNoHospital.setText("")
+            } else {
+                textInputLayoutReasonForNoHospital.visibility = View.VISIBLE
+            }
+        }
+
+        appCompatCheckBoxScheduledWeighs.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                textInputLayoutReasonNoWeighings.visibility = View.GONE
+                editTextReasonNoWeighings.setText("")
+            } else {
+                textInputLayoutReasonNoWeighings.visibility = View.VISIBLE
+            }
+        }
+
         buttonSubmit.setOnClickListener {
             val firstName = editTextFirstName.text.toString().trim()
             val lastName = editTextLastName.text.toString().trim()
@@ -85,6 +103,12 @@ class AddRespondent : AppCompatActivity() {
             val recentChildDeliveryDate = editTextRecentDeliveryDate.text.toString().trim()
             var numberOfChildren = editTextNumberOfChildren.text.toString().trim()
             val sendReminders = appCompatCheckBoxReminderMe.isChecked
+            val recentDeliveryAtHospital = appCompatCheckBoxRecentDeliveryInHospital.isChecked
+            val hasAttendedWeighIngs = appCompatCheckBoxScheduledWeighs.isChecked
+            val reasonDeliveryAtHospital = editTextReasonForNoHospital.text.toString().trim()
+            val reasonNoWeighings = editTextReasonNoWeighings.text.toString().trim()
+            val exclusiveBreastFeeding = editTextExclusiveBreastFeeding.text.toString().trim()
+            val reasonExclusiveBreastFeeding = editTextExclusiveBreastFeedingLess.text.toString().trim()
 
             if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || community.isEmpty() || language.isEmpty() || sonAge.isEmpty()) {
                 AppPresenter(this).showMessage(message = "Respondent's first name, Last name, phone, community, language and oldest son's age is required")
@@ -117,6 +141,12 @@ class AddRespondent : AppCompatActivity() {
                 dateOfBirth = birthDateParse,
                 recentDeliveryDate = recentBirthDateParse,
                 numberOfChildren = numberOfChildren,
+                hasDeliveredRecentChildAtRegisteredHospital = recentDeliveryAtHospital,
+                reasonIfNotDeliveredAtHospital = reasonDeliveryAtHospital,
+                hasAttendedAllScheduledChildWeighings = hasAttendedWeighIngs,
+                reasonIfNotAttendedAllWeighings = reasonNoWeighings,
+                numberOfExclusiveBreastFeedingMonths = exclusiveBreastFeeding,
+                reasonIfLessThanSixMonths = reasonExclusiveBreastFeeding,
                 isBackedUp = false
             )
 

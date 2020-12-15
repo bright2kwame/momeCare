@@ -4,10 +4,12 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
-import android.location.Geocoder
+import android.location.*
+import android.net.ConnectivityManager
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.res.ResourcesCompat
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.momecarefoundation.app.service.DataBackUpJobService
@@ -15,7 +17,14 @@ import java.io.IOException
 import java.text.DecimalFormat
 import java.util.*
 
+
 class Utility {
+
+    // MARK: check if the device has internet connection
+    fun hasNetworkConnection(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnectedOrConnecting
+    }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun scheduleJob(context: Context) {
@@ -33,7 +42,13 @@ class Utility {
     }
 
     // MARK: generate the letter image drawable
-    fun getLetterView(activity: Context, letter: String, fontSize: Int, colorIn: Int? = null, roundShape: Boolean? = true): TextDrawable {
+    fun getLetterView(
+        activity: Context,
+        letter: String,
+        fontSize: Int,
+        colorIn: Int? = null,
+        roundShape: Boolean? = true
+    ): TextDrawable {
         val color = colorIn ?: ColorGenerator.MATERIAL.getColor(letter)
         val builderBase = TextDrawable.builder()
             .beginConfig()
@@ -81,30 +96,25 @@ class Utility {
     /**
      * @param context, the context of the requesting activity
      * @param lat, the location latitude
-     * @param lon, the location longitude
+     * @param lng, the location longitude
      */
-    fun getLocationName(context: Context, lat: Double, lon: Double): String {
-        var name = ""
-        val geoCoder = Geocoder(context, Locale.getDefault())
-        val builder = StringBuilder()
-        try {
-            val address = geoCoder.getFromLocation(lat, lon, 1)
-            if (address.isNotEmpty()) {
-                val maxLines = address[0].maxAddressLineIndex
-                for (i in 0 until maxLines) {
-                    val addressStr = address[0].getAddressLine(i)
-                    builder.append(addressStr)
-                    builder.append(" ")
+    fun getAddress(context: Context, lat: Double, lng: Double): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        return try {
+            val addresses = geocoder.getFromLocation(lat, lng, 1)
+            var add = ""
+            if (addresses.isNotEmpty()){
+                val obj = addresses[0]
+                 add = obj.getAddressLine(0)
+                if (add.isEmpty()){
+                    add = " ${obj.countryName} ${obj.adminArea} ${obj.subAdminArea}  ${obj.locality}"
                 }
-                name = builder.toString()
             }
+            add.trim()
         } catch (e: IOException) {
-            // Handle IOException
-        } catch (e: NullPointerException) {
-            // Handle NullPointerException
+            e.printStackTrace()
+            ""
         }
-
-        return name
     }
 
 }

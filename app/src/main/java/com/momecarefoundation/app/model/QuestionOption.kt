@@ -1,9 +1,18 @@
 package com.momecarefoundation.app.model
 
+import org.json.JSONObject
+
 data class QuestionOption(var id: String, var label: String, var isSelected: Boolean){
 
     override fun toString(): String {
-        return "{question_id:$id,answer_content:$label}"
+        return parseToJson().toString()
+    }
+
+   private fun parseToJson(): JSONObject {
+        val postData = JSONObject()
+        postData.put("question_id", id)
+        postData.put("answer_content", label)
+        return postData
     }
 
     override fun equals(other: Any?): Boolean {

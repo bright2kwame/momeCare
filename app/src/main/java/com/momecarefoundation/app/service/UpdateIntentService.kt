@@ -21,6 +21,5 @@ class UpdateIntentService : IntentService("UpdateIntentService") {
 
     companion object {
         const val ACTION = AppConstants.ACTION
-        const val tag = "UPDATE_SERVICE"
     }
 }

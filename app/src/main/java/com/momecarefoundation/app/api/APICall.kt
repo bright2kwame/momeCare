@@ -60,7 +60,8 @@ class APICall(context: Context) {
             object : JsonObjectRequest(Request.Method.POST, url, respondentData,
                 { response ->
                     Log.e(tag, response.toString())
-                    val responseCode = safeRetrieveJsonData.getStringJSONData(response,"response_code")
+                    val responseCode =
+                        safeRetrieveJsonData.getStringJSONData(response, "response_code")
                     if (responseCode == "100") {
                         Respondent().clearAll()
                     }
@@ -79,7 +80,7 @@ class APICall(context: Context) {
         val responseDataContent = ArrayList<String>()
         allResponse.forEach {
             val formattedEach = formatResponse(it)
-            responseDataContent.add(formattedEach.toString().replace("\\", ""))
+            responseDataContent.add(formattedEach.toString())
         }
         responseData.put(
             "data",
@@ -192,8 +193,7 @@ class APICall(context: Context) {
                 callback.onRequestEnded()
                 val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
-                    val message = response.getString("detail")
-                    callback.onReceivedDetail(message)
+                    callback.onReceivedDetail("Password reset successfully. Proceed and login with new password")
                 } else {
                     val detail = response.getString("detail")
                     callback.onReceivedError(detail)
@@ -213,9 +213,9 @@ class APICall(context: Context) {
 
     }
 
-    fun passwordChange(code: String, password: String, callback: BaseInterface) {
+    fun passwordChange(currentPassword: String, password: String, callback: BaseInterface) {
         val data = JSONObject()
-        data.put("old_password", code)
+        data.put("old_password", currentPassword)
         data.put("new_password", password)
 
         val url = baseUrl.plus("users/change_password/")
@@ -225,8 +225,8 @@ class APICall(context: Context) {
                 callback.onRequestEnded()
                 val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
                 if (responseCode == "100") {
-                    val message = response.getString("detail")
-                    callback.onReceivedDetail(message)
+                    val user = parseUser(response.getJSONObject("results"))
+                    callback.onReceivedDetail("Password changed successfully")
                 } else {
                     val detail = response.getString("detail")
                     callback.onReceivedError(detail)
@@ -244,6 +244,45 @@ class APICall(context: Context) {
         }
         requestQueue.add(jsonObjectRequest)
 
+    }
+
+    //MARK: all respondents
+    fun myRespondents(url: String, callback: RespondentCallback) {
+        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, null,
+            { response ->
+                Log.e(tag, response.toString())
+                callback.onRequestEnded()
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
+                if (responseCode == "100") {
+                    val data = ArrayList<Respondent>()
+                    val results = response.getJSONArray("results")
+                    for (i in 0 until results.length()) {
+                        val item = results.getJSONObject(i)
+                        data.add(parseRespondent(item))
+                    }
+                    callback.onReceivedItems(data)
+                    callback.onReceivedNextUrl(
+                        safeRetrieveJsonData.getStringJSONData(
+                            response,
+                            "next"
+                        )
+                    )
+                } else {
+                    val detail = response.getString("detail")
+                    callback.onReceivedError(detail)
+                }
+            },
+            { error ->
+                callback.onRequestEnded()
+                Log.e(tag, error.toString())
+                callback.onReceivedError(genericError)
+            }
+        ) {
+            override fun getHeaders(): Map<String, String> {
+                return customHeader()
+            }
+        }
+        requestQueue.add(jsonObjectRequest)
     }
 
     //MARK: all survey groups
@@ -505,7 +544,7 @@ class APICall(context: Context) {
     //MARK: part user
     private fun parseUser(jsonObject: JSONObject): User {
         val id = jsonObject.getInt("id").toString()
-        val token = jsonObject.getString("auth_token")
+        val token = safeRetrieveJsonData.getStringJSONData(jsonObject,"auth_token")
         val email = jsonObject.getString("email")
         val username = jsonObject.getString("username")
         val avatar = jsonObject.getString("user_avatar")
@@ -544,23 +583,44 @@ class APICall(context: Context) {
     }
 
     //MARK: parse respondent
-     fun parseRespondent(jsonObject: JSONObject): Respondent {
+    fun parseRespondent(jsonObject: JSONObject): Respondent {
         val id = safeRetrieveJsonData.getStringJSONData(jsonObject, "id")
         val phone = safeRetrieveJsonData.getStringJSONData(jsonObject, "phone_number")
         val firstName = safeRetrieveJsonData.getStringJSONData(jsonObject, "first_name")
         val lastName = safeRetrieveJsonData.getStringJSONData(jsonObject, "last_name")
         val dateOfBirth = safeRetrieveJsonData.getStringJSONData(jsonObject, "date_of_birth")
-        val deliveryDate = safeRetrieveJsonData.getStringJSONData(jsonObject, "recent_delivery_date")
+        val deliveryDate =
+            safeRetrieveJsonData.getStringJSONData(jsonObject, "recent_delivery_date")
         val languageSpoken = safeRetrieveJsonData.getStringJSONData(jsonObject, "language_spoken")
-        val reasonIfNotDeliveredAtHospital = safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_not_delivered_at_hospital")
-        val hasDeliveredRecentChildAtRegisteredHospital = safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "has_delivered_recent_child_at_registered_hospital")
-        val hasAttendedAllScheduledChildWeighings = safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "has_attended_all_scheduled_child_weighings")
-        val receivePhoneCallReminders = safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "receive_phone_call_reminders")
-        val reasonIfNotAttendedAllWeighings = safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_not_attended_all_weighings")
-        val numberOfExclusiveBreastFeedingMonths = safeRetrieveJsonData.getStringJSONData(jsonObject, "number_of_exclusive_breastfeeding_months")
-        val reasonIfLessThanSixMonths = safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_less_than_six_months")
-        val ageOfEldestChild = safeRetrieveJsonData.getStringJSONData(jsonObject, "age_of_eldest_child")
-        val numberOfChildren = safeRetrieveJsonData.getStringJSONData(jsonObject, "number_of_children")
+        val reasonIfNotDeliveredAtHospital = safeRetrieveJsonData.getStringJSONData(
+            jsonObject,
+            "reason_if_not_delivered_at_hospital"
+        )
+        val hasDeliveredRecentChildAtRegisteredHospital =
+            safeRetrieveJsonData.getDataBooleanJSONData(
+                jsonObject,
+                "has_delivered_recent_child_at_registered_hospital"
+            )
+        val hasAttendedAllScheduledChildWeighings = safeRetrieveJsonData.getDataBooleanJSONData(
+            jsonObject,
+            "has_attended_all_scheduled_child_weighings"
+        )
+        val receivePhoneCallReminders =
+            safeRetrieveJsonData.getDataBooleanJSONData(jsonObject, "receive_phone_call_reminders")
+        val reasonIfNotAttendedAllWeighings = safeRetrieveJsonData.getStringJSONData(
+            jsonObject,
+            "reason_if_not_attended_all_weighings"
+        )
+        val numberOfExclusiveBreastFeedingMonths = safeRetrieveJsonData.getStringJSONData(
+            jsonObject,
+            "number_of_exclusive_breastfeeding_months"
+        )
+        val reasonIfLessThanSixMonths =
+            safeRetrieveJsonData.getStringJSONData(jsonObject, "reason_if_less_than_six_months")
+        val ageOfEldestChild =
+            safeRetrieveJsonData.getStringJSONData(jsonObject, "age_of_eldest_child")
+        val numberOfChildren =
+            safeRetrieveJsonData.getStringJSONData(jsonObject, "number_of_children")
         val community = safeRetrieveJsonData.getStringJSONData(jsonObject, "community")
 
         var birthDateParse: Date? = null
@@ -573,9 +633,26 @@ class APICall(context: Context) {
             recentBirthDateParse = SimpleDateFormat("yyyy-mm-dd").parse(deliveryDate)
         }
 
-        return Respondent(id,firstName,lastName,phone,birthDateParse,recentBirthDateParse,languageSpoken,community,hasDeliveredRecentChildAtRegisteredHospital,
-            reasonIfNotDeliveredAtHospital,hasAttendedAllScheduledChildWeighings,reasonIfNotAttendedAllWeighings, numberOfExclusiveBreastFeedingMonths,
-            reasonIfLessThanSixMonths,ageOfEldestChild,receivePhoneCallReminders,numberOfChildren,false)
+        return Respondent(
+            id,
+            firstName,
+            lastName,
+            phone,
+            birthDateParse,
+            recentBirthDateParse,
+            languageSpoken,
+            community,
+            hasDeliveredRecentChildAtRegisteredHospital,
+            reasonIfNotDeliveredAtHospital,
+            hasAttendedAllScheduledChildWeighings,
+            reasonIfNotAttendedAllWeighings,
+            numberOfExclusiveBreastFeedingMonths,
+            reasonIfLessThanSixMonths,
+            ageOfEldestChild,
+            receivePhoneCallReminders,
+            numberOfChildren,
+            false
+        )
 
     }
 

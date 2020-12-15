@@ -81,7 +81,7 @@ class CategoryFragment : Fragment() {
     //MARK: fetch the data from the server
     private fun fetchData(url: String) {
         progressBar?.visibility = View.VISIBLE
-        activity?.let { APICall(it).surveyGroups(url,itemInterface)  }
+        activity?.let { APICall(it).surveyGroups(url, itemInterface) }
     }
 
     private val itemInterface = object : SurveyGroupCallback {
@@ -116,7 +116,9 @@ class CategoryFragment : Fragment() {
     private fun cleanRecordsAndIndicateFailure() {
         progressBar?.visibility = View.INVISIBLE
         this.data.clear()
-        Toast.makeText(context?.applicationContext, "Failed to refresh list", Toast.LENGTH_LONG).show()
+        activity?.let {
+            Toast.makeText(it, "Failed to refresh list", Toast.LENGTH_LONG).show()
+        }
     }
 
     // MARK: delete all old products and restore with new products
@@ -126,12 +128,14 @@ class CategoryFragment : Fragment() {
             Category().saveAll(data)
             uiThread {
                 loadsAllItems(false)
-                Toast.makeText(
-                    requireContext(),
-                    "Synced all items",
-                    Toast.LENGTH_LONG
-                ).show()
-                progressBar.visibility = View.INVISIBLE
+                activity?.let {
+                    Toast.makeText(
+                        it,
+                        "Synced all items",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                progressBar?.visibility = View.INVISIBLE
             }
         }
     }

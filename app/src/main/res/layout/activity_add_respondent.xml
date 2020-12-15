@@ -40,6 +40,8 @@
             android:id="@+id/linearLayoutContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -119,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_add_circle_dark"
+                app:endIconDrawable="@drawable/ic_add_circle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone">
@@ -146,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_add_circle_dark"
+                app:endIconDrawable="@drawable/ic_add_circle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDateOfBirth">
@@ -206,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:hint="Age of Oldest Song"
+                    android:hint="Age of Oldest Son"
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:singleLine="true"
@@ -269,6 +271,126 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/appCompatCheckBoxRecentDeliveryInHospital"
+                android:layout_width="match_parent"
+                android:checked="false"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:text="Recently Delivered In Hospital"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutCommunity" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutReasonForNoHospital"
+                style="@style/MaterialTextTextInputRoundedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatCheckBoxRecentDeliveryInHospital">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextReasonForNoHospital"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="Reason for not delivering in hospital"
+                    android:inputType="textMultiLine"
+                    android:minLines="5"
+                    android:scrollHorizontally="false"
+                    android:scrollbars="vertical"
+                    android:lines="5"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/appCompatCheckBoxScheduledWeighs"
+                android:layout_width="match_parent"
+                android:checked="false"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:text="Has Attended Scheduled Weighings"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutReasonForNoHospital" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutReasonNoWeighings"
+                style="@style/MaterialTextTextInputRoundedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatCheckBoxScheduledWeighs">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextReasonNoWeighings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="Reason for not attending"
+                    android:inputType="textMultiLine"
+                    android:minLines="5"
+                    android:scrollHorizontally="false"
+                    android:scrollbars="vertical"
+                    android:lines="5"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutExclusiveBreastFeeding"
+                style="@style/MaterialTextTextInputRoundedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutReasonNoWeighings">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextExclusiveBreastFeeding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:hint="Number of exclusive breast feeding months"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutExclusiveBreastFeedingLess"
+                style="@style/MaterialTextTextInputRoundedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutExclusiveBreastFeeding">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextExclusiveBreastFeedingLess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="Reason if bread feeding is less than six months"
+                    android:inputType="textMultiLine"
+                    android:minLines="5"
+                    android:scrollHorizontally="false"
+                    android:scrollbars="vertical"
+                    android:lines="5"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/appCompatCheckBoxReminderMe"
                 android:layout_width="match_parent"
                 android:checked="true"
@@ -276,7 +398,7 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:text="Receive Reminders"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutCommunity" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutExclusiveBreastFeedingLess" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSubmit"

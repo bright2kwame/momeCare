@@ -55,6 +55,7 @@ class MoMeCare : Application() {
                 .addOnSuccessListener { location: Location? ->
                     // Got last known location. In some rare situations this can be null.
                     locationReceived = location
+
                 }
             return
         }

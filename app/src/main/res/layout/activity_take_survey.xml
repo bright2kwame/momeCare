@@ -30,9 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,8 +40,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/linearLayoutContent"
@@ -51,21 +51,42 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     android:background="@drawable/bordered_small_shape"
                     android:padding="@dimen/activity_horizontal_margin">
 
+                    <ImageView
+                        android:id="@+id/imageViewSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        app:srcCompat="@drawable/ic_searching" />
+
                     <TextView
                         android:id="@+id/textViewRespondent"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_add_circle"
-                        android:drawableRight="@drawable/ic_add_circle"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginLeft="@dimen/margin_small"
+                        android:layout_toStartOf="@+id/imageViewAdd"
+                        android:layout_toLeftOf="@+id/imageViewAdd"
+                        android:layout_toEndOf="@+id/imageViewSearch"
+                        android:layout_toRightOf="@+id/imageViewSearch"
                         android:ellipsize="end"
-                        android:gravity="start"
                         android:text="Add Respondent"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageViewAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        app:srcCompat="@drawable/ic_add_circle" />
 
                 </RelativeLayout>
 
@@ -96,10 +117,7 @@
                 android:text="Submit Response"
                 android:textAllCaps="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatCheckBoxReminderMe" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

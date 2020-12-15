@@ -22,7 +22,7 @@ class DataBackUpJobService : JobService() {
     }
 
     private fun handleAction() {
-        User().getUser().let {
+        User().getUser()?.let {
                 APICall(applicationContext).backUpOfflineOrder()
         }
     }
