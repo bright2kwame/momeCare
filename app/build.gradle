@@ -62,4 +62,5 @@ dependencies {
     implementation "org.jetbrains.anko:anko-common:$anko_version"
     implementation "com.amulyakhare:com.amulyakhare.textdrawable:1.0.1"
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 }

@@ -20,4 +20,5 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
     <color name="colorBackground">#FBFAFB</color>
+    <color name="colorRed">#F44336</color>
 </resources>

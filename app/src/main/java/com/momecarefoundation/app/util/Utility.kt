@@ -1,9 +1,11 @@
 package com.momecarefoundation.app.util
 
+import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.location.*
 import android.net.ConnectivityManager
 import android.os.Build
@@ -115,6 +117,17 @@ class Utility {
             e.printStackTrace()
             ""
         }
+    }
+
+    //MARK: recreate application
+    fun recreateTask(activity: Activity) {
+        activity.packageManager
+            .getLaunchIntentForPackage(activity.packageName)
+            ?.let { intent ->
+                val restartIntent = Intent.makeRestartActivityTask(intent.component)
+                activity.startActivity(restartIntent)
+                Runtime.getRuntime().exit(0)
+            }
     }
 
 }

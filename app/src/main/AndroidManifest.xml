@@ -22,9 +22,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoMECAREFoundation">
-        <activity android:name=".MyRespondents"></activity>
+        <activity android:name=".MyRespondents" />
         <activity android:name=".AddRespondent" />
         <activity android:name=".TakeSurvey" />
+        <activity android:name=".fragment.Respondents" />
+        <activity android:name=".fragment.Responses" />
+        <activity android:name=".fragment.Surveys" />
         <activity android:name=".Home" />
         <activity
             android:name=".Tutorial"

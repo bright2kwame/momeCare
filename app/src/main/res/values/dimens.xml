@@ -7,7 +7,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin_progress">20dp</dimen>
     <dimen name="top_margin">50dp</dimen>
-    <dimen name="corner_radius">4dp</dimen>
+    <dimen name="corner_radius">0dp</dimen>
     <dimen name="card_elevation">6dp</dimen>
     <dimen name="negative_item_margin">0dp</dimen>
     <dimen name="category_icon_height">100dp</dimen>

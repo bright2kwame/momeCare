@@ -3,40 +3,36 @@ package com.momecarefoundation.app.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.Nullable
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.momecarefoundation.app.R
 import com.momecarefoundation.app.TakeSurvey
 import com.momecarefoundation.app.adapter.FeedAdapter
-import com.momecarefoundation.app.adapter.GridSpacingItemDecoration
 import com.momecarefoundation.app.api.APICall
 import com.momecarefoundation.app.callback.AdapterCallback
 import com.momecarefoundation.app.callback.SurveyCallback
 import com.momecarefoundation.app.model.Survey
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.progressBar
+import kotlinx.android.synthetic.main.fragment_home.recyclerView
+import kotlinx.android.synthetic.main.fragment_home.textView
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 
-class SurveyFragment : Fragment() {
+class Surveys : AppCompatActivity() {
 
     private val data = ArrayList<Survey>()
     private var baseAdapter: FeedAdapter? = null
     private var apiUrl = APICall.baseUrl.plus("surveys/filter_surveys/")
 
-    @Nullable
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        @Nullable container: ViewGroup?,
-        @Nullable savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    companion object {
+        const val tag = "SURVEYS"
     }
 
     private var itemSelected = object : AdapterCallback {
@@ -44,20 +40,27 @@ class SurveyFragment : Fragment() {
             super.onActionPerformed(item, position)
 
             val survey = item as Survey
-            val takeSurveyIntent = Intent(requireContext(), TakeSurvey::class.java)
+            val takeSurveyIntent = Intent(this@Surveys, TakeSurvey::class.java)
             takeSurveyIntent.putExtra(TakeSurvey.survey, survey.toString())
-            requireContext().startActivity(takeSurveyIntent)
+            startActivity(takeSurveyIntent)
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_home)
+
+        setSupportActionBar(toolbar as Toolbar?)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
+        textViewTitle.text = tag
 
 
         baseAdapter = FeedAdapter(data, itemSelected)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = baseAdapter
 
 
@@ -86,7 +89,7 @@ class SurveyFragment : Fragment() {
     //MARK: fetch the data from the server
     private fun fetchData(url: String) {
         progressBar?.visibility = View.VISIBLE
-        activity?.let { APICall(it).surveys(url, null, itemInterface) }
+        APICall(this).surveys(url, null, itemInterface)
     }
 
     //MARK: show the progress
@@ -141,9 +144,7 @@ class SurveyFragment : Fragment() {
     private fun cleanRecordsAndIndicateFailure() {
         progressBar?.visibility = View.INVISIBLE
         this.data.clear()
-        activity?.let {
-            Toast.makeText(it, "Failed to refresh list", Toast.LENGTH_LONG).show()
-        }
+        Toast.makeText(this, "Failed to refresh list", Toast.LENGTH_LONG).show()
     }
 
     // MARK: delete all old products and restore with new products
@@ -153,15 +154,22 @@ class SurveyFragment : Fragment() {
             Survey().saveAll(data)
             uiThread {
                 loadsAllItems(false)
-                activity?.let {
-                    Toast.makeText(
-                        it,
-                        "Synced all items",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                Toast.makeText(
+                    it,
+                    "Synced all items",
+                    Toast.LENGTH_LONG
+                ).show()
+
                 progressBar?.visibility = View.INVISIBLE
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

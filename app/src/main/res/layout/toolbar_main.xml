@@ -22,6 +22,7 @@
         android:maxLines="1"
         android:lines="1"
         android:ellipsize="end"
+        android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 

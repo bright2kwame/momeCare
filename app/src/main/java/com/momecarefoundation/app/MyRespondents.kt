@@ -66,7 +66,10 @@ class MyRespondents : AppCompatActivity() {
                 super.onScrollStateChanged(recyclerView, newState)
                 val lastPosition = feedItems.size - 5
                 if (linearLayoutManager.findLastVisibleItemPosition() >= lastPosition) {
-                    if (feedItems.isNotEmpty() && moreUrl.isNotEmpty() && !loadedPages.contains(moreUrl)) {
+                    if (feedItems.isNotEmpty() && moreUrl.isNotEmpty() && !loadedPages.contains(
+                            moreUrl
+                        )
+                    ) {
                         loadedPages.add(moreUrl)
                         getData(moreUrl)
                     }
@@ -83,7 +86,7 @@ class MyRespondents : AppCompatActivity() {
 
     private fun getData(urlIn: String) {
         progressBar.visibility = View.VISIBLE
-        apiCall?.myRespondents(urlIn, object : RespondentCallback{
+        apiCall?.myRespondents(urlIn, null, null, null, null, object : RespondentCallback {
 
             override fun onReceivedNextUrl(url: String) {
                 super.onReceivedNextUrl(url)
@@ -117,10 +120,16 @@ class MyRespondents : AppCompatActivity() {
         val result = ArrayList<Respondent>()
         savedList.forEach {
             // MARK: the search matches the name
-            val textMatches = (text.equals(it.firstName, ignoreCase = true)) || (text.equals(
+            val textMatches = (text.equals(it.firstName, ignoreCase = true)) ||
+                    (text.equals(
                 it.lastName,
-                ignoreCase = true
-            )) || it.firstName.toUpperCase().contains(text.toUpperCase()) || it.phone.toUpperCase()
+                ignoreCase = true)) ||
+                    (text.equals(
+                it.phone,
+                ignoreCase = true)) ||
+                    it.firstName.toUpperCase()
+                .contains(text.toUpperCase()) || it.lastName.toUpperCase()
+                .contains(text.toUpperCase()) || it.phone.toUpperCase()
                 .contains(text.toUpperCase())
             if (textMatches) {
                 result.add(it)

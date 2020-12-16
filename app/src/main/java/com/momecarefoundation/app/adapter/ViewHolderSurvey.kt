@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.momecarefoundation.app.R
 
 
@@ -14,7 +15,7 @@ import com.momecarefoundation.app.R
 class ViewHolderSurvey(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var imageViewIcon: ImageView? = null
     var imageView: ImageView? = null
-    var imageViewAction: ImageView? = null
+    var imageViewAction: MaterialButton? = null
     var textViewName: TextView? = null
     var textViewInfo: TextView? = null
     var textViewResponds: TextView? = null

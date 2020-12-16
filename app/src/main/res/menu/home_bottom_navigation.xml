@@ -2,39 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/pageGroups"
+        android:id="@+id/pageNotification"
         android:enabled="true"
-        android:icon="@drawable/ic_category"
+        android:icon="@drawable/ic_notifications"
         android:title="@string/menu_categories"
         app:tooltipText="@string/menu_categories" />
-
-    <item
-        android:id="@+id/pageResponds"
-        android:enabled="true"
-        android:icon="@drawable/ic_responds"
-        android:title="@string/menu_responds"
-        app:tooltipText="@string/menu_responds" />
-
-
-    <item
-        android:id="@+id/pageSurveys"
-        android:enabled="true"
-        android:icon="@drawable/ic_surveys"
-        android:title="@string/menu_surveys"
-        app:tooltipText="@string/menu_surveys" />
-
-    <item
-        android:id="@+id/pageRespondents"
-        android:enabled="true"
-        android:icon="@drawable/ic_respondents"
-        android:title="@string/menu_respondents"
-        app:tooltipText="@string/menu_respondents" />
-
-    <item
-        android:id="@+id/pageAccount"
-        android:enabled="true"
-        android:icon="@drawable/ic_user_account"
-        android:title="@string/menu_accounts"
-        app:tooltipText="@string/menu_accounts" />
 
 </menu>

@@ -2,6 +2,7 @@ package com.momecarefoundation.app.api
 
 import android.content.Context
 import android.util.Log
+import androidx.preference.PreferenceManager
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
@@ -16,7 +17,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class APICall(context: Context) {
+class APICall(var context: Context) {
     private var genericError = "Failed to reach server, try again later."
     private val requestQueue = Volley.newRequestQueue(context.applicationContext)
     private var user = User().getUser()
@@ -114,6 +115,56 @@ class APICall(context: Context) {
         if (allResponse.isNotEmpty()) {
             requestQueue.add(responseJsonObjectRequest)
         }
+    }
+
+    //MARK: get overview date
+    fun getOverview(
+        startDate: String? = null,
+        endDate: String? = null,
+        institutionId: String? = null,
+        callback: BaseInterface
+    ) {
+        val data = JSONObject()
+        startDate?.let {
+            data.put("start_date", it)
+        }
+        endDate?.let {
+            data.put("end_date", it)
+        }
+        institutionId?.let {
+            data.put("institution_id", it)
+        }
+        val url = baseUrl.plus("surveys/overviews/")
+        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, data,
+            { response ->
+                Log.e(tag, response.toString())
+                val responseCode = safeRetrieveJsonData.getStringJSONData(response, "response_code")
+                if (responseCode == "100") {
+                    val totalResponse =
+                        response.getJSONObject("results").getString("total_responses")
+                    val totalRespondents =
+                        response.getJSONObject("results").getString("total_respondents")
+                    val totalSurvey = response.getJSONObject("results").getString("total_surveys")
+                    PreferenceManager.getDefaultSharedPreferences(context).edit().putString("TOTAL_RESPONSES", totalResponse).apply()
+                    PreferenceManager.getDefaultSharedPreferences(context).edit().putString("TOTAL_RESPONDENTS", totalRespondents).apply()
+                    PreferenceManager.getDefaultSharedPreferences(context).edit().putString("TOTAL_SURVEYS", totalSurvey).apply()
+                    callback.onRequestEnded()
+                } else {
+                    val detail = response.getString("detail")
+                    callback.onReceivedDetail(detail)
+                }
+            },
+            { error ->
+                Log.e(tag, error.toString())
+                callback.onRequestEnded()
+                callback.onReceivedError(genericError)
+            }
+        ) {
+            override fun getHeaders(): Map<String, String> {
+                return customHeader()
+            }
+        }
+        requestQueue.add(jsonObjectRequest)
     }
 
     //MARK: login session
@@ -247,8 +298,29 @@ class APICall(context: Context) {
     }
 
     //MARK: all respondents
-    fun myRespondents(url: String, callback: RespondentCallback) {
-        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, null,
+    fun myRespondents(
+        url: String,
+        respondentId: String? = null,
+        startDate: String? = null,
+        endDate: String? = null,
+        searchText: String? = null,
+        callback: RespondentCallback
+    ) {
+        val postData = JSONObject()
+        respondentId?.let {
+            postData.put("respondent_id", it)
+        }
+        startDate?.let {
+            postData.put("start_date", it)
+        }
+        endDate?.let {
+            postData.put("end_date", it)
+        }
+        searchText?.let {
+            postData.put("search_text", it)
+        }
+
+        val jsonObjectRequest = object : JsonObjectRequest(Request.Method.POST, url, postData,
             { response ->
                 Log.e(tag, response.toString())
                 callback.onRequestEnded()
@@ -544,7 +616,7 @@ class APICall(context: Context) {
     //MARK: part user
     private fun parseUser(jsonObject: JSONObject): User {
         val id = jsonObject.getInt("id").toString()
-        val token = safeRetrieveJsonData.getStringJSONData(jsonObject,"auth_token")
+        val token = safeRetrieveJsonData.getStringJSONData(jsonObject, "auth_token")
         val email = jsonObject.getString("email")
         val username = jsonObject.getString("username")
         val avatar = jsonObject.getString("user_avatar")

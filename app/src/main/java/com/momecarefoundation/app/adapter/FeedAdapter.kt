@@ -170,5 +170,9 @@ class FeedAdapter(private var items: List<Any>, private var adapterCallback: Ada
         imageViewAction?.setOnClickListener {
             adapterCallback.onActionPerformed(data, viewHolder.adapterPosition)
         }
+
+        parent.setOnClickListener {
+            adapterCallback.onActionPerformed(data, viewHolder.adapterPosition)
+        }
     }
 }

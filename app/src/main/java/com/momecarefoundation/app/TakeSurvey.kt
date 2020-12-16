@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -166,7 +167,9 @@ class TakeSurvey : AppCompatActivity() {
                 respondentIn?.let {
                     val objectData = JSONObject(it)
                     respondent = APICall(this).parseRespondent(objectData)
-                    textViewRespondent.text = "${respondent?.lastName} ${respondent?.firstName}"
+                    val nameAdded = "${respondent?.lastName} ${respondent?.firstName}"
+                    textViewRespondent.text = nameAdded
+                    Toast.makeText(this, "$nameAdded selected", Toast.LENGTH_LONG).show()
                 }
             }
         }

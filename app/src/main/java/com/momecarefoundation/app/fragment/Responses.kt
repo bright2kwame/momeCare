@@ -2,25 +2,32 @@ package com.momecarefoundation.app.fragment
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.Nullable
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.momecarefoundation.app.R
 import com.momecarefoundation.app.adapter.FeedAdapter
 import com.momecarefoundation.app.callback.AdapterCallback
 import com.momecarefoundation.app.model.Response
 import kotlinx.android.synthetic.main.fragment_response.*
+import kotlinx.android.synthetic.main.fragment_response.progressBar
+import kotlinx.android.synthetic.main.fragment_response.recyclerView
+import kotlinx.android.synthetic.main.fragment_response.textView
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 
-class ResponseFragment : Fragment() {
+class Responses : AppCompatActivity() {
 
     private val data = ArrayList<Response>()
     private var baseAdapter: FeedAdapter? = null
+
+    companion object {
+        const val tag = "RESPONDS"
+    }
 
     private var itemSelected = object : AdapterCallback {
         override fun onActionPerformed(item: Any, position: Int) {
@@ -28,22 +35,20 @@ class ResponseFragment : Fragment() {
         }
     }
 
-    @Nullable
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        @Nullable container: ViewGroup?,
-        @Nullable savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_response, container, false)
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_response)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        setSupportActionBar(toolbar as Toolbar?)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
+        textViewTitle.text = tag
+
 
         baseAdapter = FeedAdapter(data, itemSelected)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = baseAdapter
 
         loadsAllItems()
@@ -89,5 +94,12 @@ class ResponseFragment : Fragment() {
         stopProgress()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }
